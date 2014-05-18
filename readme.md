@@ -19,15 +19,15 @@ Below are some of the key bindings implemented (if this table is stale, feel fre
 |:------|:----|
 |ESC | Enter command Mode (makes VIM key bindings active)|
 |i| Enter insert mode (makes onenote act normal)|
+|o/O|Enter insert mode on line below/above|
 | hjik | Motion Commands|
 | zc/zo| Fold Close/Fold Open|
 |C^F/C^B|Page Up/Page Down|
 |dd/dw|Erase line/ Erase Word|
 |yy|Copy line|
 |p|paste|
-|o|start typing on ine below|
 
 Quirks
 -----
 There are lots of quirks because AutoHotKey doesn't know the current cursor location, and OneNote behaves differently based on the cursor location. I'll list some of the bigger ones here
-* When in command mode, and you enter a key that isn't a command key, the keys are typed in onenote, but you're still in command mode.
+* Fold only works in list mode.

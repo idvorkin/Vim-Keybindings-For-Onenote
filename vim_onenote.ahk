@@ -68,11 +68,14 @@ a::
 }
 return 
 
++o::
+Send, ^{up}{End}{Enter}
+Gosub TypingMode
+return
+
 o::
-{
-    Send, {End}{Enter}
-    Gosub TypingMode
-}
+Send, {End}{Enter}
+Gosub TypingMode
 return
 
 u::Send, ^z
