@@ -38,6 +38,11 @@ TypingMode:
 return
 
 
++i::
+    SendInput, {Home}
+    Gosub TypingMode
+
+return 
 
 i::Gosub TypingMode
 return 
@@ -61,11 +66,14 @@ return
 x::SendInput, {Delete}
 return 
 
++a::
+SendInput, {End}
+Gosub TypingMode
+return 
+
 a::
-{
-    SendInput, {Right}
-    Gosub TypingMode
-}
+SendInput, {Right}
+Gosub TypingMode
 return 
 
 +o::
@@ -118,6 +126,12 @@ Send, {Home}{ShiftDown}{End}
 Send, ^c
 Send, {Shift}
 return 
+
++d::
+Send, {ShiftDown}{End}
+Send {Del}
+Send, {ShiftUp}
+return
 
 d::
 if (A_PriorHotkey <> "d" or A_TimeSincePriorHotkey > 400)

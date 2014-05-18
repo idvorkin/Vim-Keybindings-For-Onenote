@@ -18,7 +18,8 @@ Below are some of the key bindings implemented (if this table is stale, feel fre
 | Keys | Name|
 |:------|:----|
 |ESC | Enter command Mode (makes VIM key bindings active)|
-|i| Enter insert mode (makes onenote act normal)|
+|i/I| Enter insert mode before cursor/at start of line |
+|a/A|Enter insert mode after curser/at end of line|
 |o/O|Enter insert mode on line below/above|
 | hjik | Motion Commands|
 | zc/zo| Fold Close/Fold Open|
