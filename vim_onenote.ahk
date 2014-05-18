@@ -77,7 +77,7 @@ Gosub TypingMode
 return 
 
 +o::
-Send, ^{up}{End}{Enter}
+Send, {home}^{up}{End}{Enter}
 Gosub TypingMode
 return
 
@@ -155,8 +155,12 @@ z::
 ; Note, you can only disable hotkeys that are implemented (in this case o)
 
 hotkey o, off
+hotkey +o, off
+hotkey c, off
     Input, SingleKey, L1
 hotkey o, on
+hotkey +o, on
+hotkey c, on
 
 if SingleKey = c
 {
