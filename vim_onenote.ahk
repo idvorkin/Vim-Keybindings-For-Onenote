@@ -150,3 +150,16 @@ else if SingleKey = o
     SendInput, !+{+}
 }
 return
+
+; Eat all other keys if in command mode.
+c::
+e::
+f::
+g::
+m::
+n::
+r::
+s::
+t::
+return
+
