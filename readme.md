@@ -5,7 +5,7 @@ This project brings the power of VIM to the organizing power of Onenote.
 
 To use this project, you must have [AutoHotKey](http://www.autohotkey.com/) installed. 
 
-To use, the script, launch autohotkey passing vim_onenote as the script name.
+To use, the script, launch AutoHotKey passing vim_onenote as the script name.
 
 ```
 C:\gits\Vim-Keybindings-For-Onenote>\bin_drop\AutoHotkey.exe vim_onenote.ahk
@@ -18,15 +18,17 @@ Below are some of the key bindings implemented (if this table is stale, feel fre
 | Keys | Name|
 |:------|:----|
 |ESC | Enter command Mode (makes VIM key bindings active)|
+| hjik | Motion Commands|
+|C^F/C^B|Page Up/Page Down|
+|0/$|Start Of Line/End Of Line|
 |i/I| Enter insert mode before cursor/at start of line |
 |a/A|Enter insert mode after curser/at end of line|
 |o/O|Enter insert mode on line below/above|
-| hjik | Motion Commands|
-| zc/zo| Fold Close/Fold Open|
-|C^F/C^B|Page Up/Page Down|
 |dd/dw|Erase line/ Erase Word|
 |yy|Copy line|
 |p|paste|
+|~|invert character|
+| zc/zo| Fold Close/Fold Open|
 
 Quirks
 -----
