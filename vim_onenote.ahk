@@ -27,7 +27,6 @@ SetTitleMatchMode 2 ;- Mode 2 is window title substring.
 ; ESC enters Command Mode
 ESC::
 	Suspend, Off
-	CoordMode, ToolTip, Screen
 	ToolTip, OneNote Vim Command Mode Active, 0, 0
 return
 
@@ -134,7 +133,7 @@ Send, {ShiftUp}
 return
 
 d::
-if (A_PriorHotkey <> "d" or A_TimeSincePriorHotkey > 400)
+if (A_PriorHotkey <> "d" or A_TimeSincePriorHotkey > 400)G
 {
     return
 }
@@ -143,12 +142,44 @@ Send, {Del}
 Send, {Shift}
 return 
 
+; TODO handle regular paste , vs paste something picked up with yy
+; current behavior assumes yanked with yy.
 p::
 Send, {End}{Enter}^v
+return
+
+; swap case of current letter - doesn't work need to debug.
+~::
+    ; push clipboard to local variable
+    ClipSaved := ClipboardAll
+
+        ; copy 1 charector
+        Send, {ShiftDown}{Right}
+        Send, ^c
+        Send, {Shift}
+
+        ; invert char
+        char_to_invert:= Substr(Clipboard, 1, 1)
+        if char_to_invert is upper
+           inverted_char := Chr(Asc(char_to_invert) + 32)
+        else if char_to_invert is lower
+           inverted_char := Chr(Asc(char_to_invert) - 32)
+        else
+           inverted_char := char_to_invert
+
+        ;paste char.
+        ClipBoard := inverted_char
+        Send ^v{left}{right} 
+
+        ;restore original clipboard
+        Clipboard := ClipSaved
+        ClipWait
+    ClipSaved := ; free memory
 
 return
 
-; z is the fold command.
+; z  is the fold fold command.
+
 z::
 ; multi threading is confusing in autohotkey and is getting triggered when you press the second key in the sequence.
 ; so turn off the hotkeys while running the input command, and turn them back on. 
@@ -182,5 +213,24 @@ n::
 r::
 s::
 t::
-return
-
++C::
++E::
++G::
++H::
++J::
++K::
++L::
++M::
++N::
++P::
++Q::
++R::
++S::
++T::
++U::
++V::
++W::
++X::
++Y::
++Z::
+return::
