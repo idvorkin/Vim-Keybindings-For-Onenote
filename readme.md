@@ -1,5 +1,6 @@
 VIM Key bindings for One Note
 ====
+*This projet is a lab in [OneNoteLabs](https://github.com/idvorkin/OneNoteLabs/wiki)*
 
 This project brings the power of VIM to the organizing power of Onenote. 
 
