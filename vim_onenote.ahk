@@ -19,19 +19,25 @@
 ;---------------------------------------
 ;---------------------------------------
 
-Suspend, On ; TBD - Document how this works.
+; The VIM input model has two modes, normal mode, where you enter commands, and insert mode, where keys are inserted into the text.
+;
+; In insert mode, this script is suspended, and only the ESC hotkey is active, all other keystrokes are propogated to onenote. When ESC is pressed, the script enters normal mode.
+
+; In normal mode, this script is active and all HotKeys are active. Hotkeys that need to return to insert mode, end by calling InsertMode. On script startup, InsertMode is entered.
+
+Gosub InsertMode ; goto InsertMode mode on script startup
 
 SetTitleMatchMode 2 ;- Mode 2 is window title substring.
 #IfWinActive, OneNote ; Only apply this script to onenote.
 
-; ESC enters Command Mode
+; ESC enters Normal Mode
 ESC::
 	Suspend, Off
-	ToolTip, OneNote Vim Command Mode Active, 0, 0
+	ToolTip, OneNote Vim Normal Mode Active, 0, 0
 return
 
-; Return to regular mode.
-TypingMode:
+; Return to InsertMode
+InsertMode:
 	ToolTip
 	Suspend, On
 return
@@ -39,11 +45,10 @@ return
 
 +i::
     SendInput, {Home}
-    Gosub TypingMode
-
+    Gosub InsertMode
 return 
 
-i::Gosub TypingMode
+i::Gosub InsertMode
 return 
 
 ; vi left and right
@@ -67,28 +72,31 @@ return
 
 +a::
 SendInput, {End}
-Gosub TypingMode
+Gosub InsertMode
 return 
 
 a::
 SendInput, {Right}
-Gosub TypingMode
+Gosub InsertMode
 return 
 
 +o::
 Send, {home}^{up}{End}{Enter}
-Gosub TypingMode
+Gosub InsertMode
 return
 
 o::
 Send, {End}{Enter}
-Gosub TypingMode
+Gosub InsertMode
 return
 
+; undo
 u::Send, ^z
 return 
-^~::Send, ^y
+; redo.
+^r::Send, ^y
 return 
+
 w::
 ; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
 if (A_PriorHotkey == "d" and A_TimeSincePriorHotkey < 400)
@@ -114,6 +122,7 @@ return
 ^f::Send, {PgDn}
 return 
 ^b::Send, {PgUp}
+
 
 ;; TBD Design a more generic <command> <motion> pattern, for now implement yy and dd the most commonly used commands.
 y::

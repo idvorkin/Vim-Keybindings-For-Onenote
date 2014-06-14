@@ -18,13 +18,14 @@ Below are some of the key bindings implemented (if this table is stale, feel fre
 
 | Keys | Name|
 |:------|:----|
-|ESC | Enter command Mode (makes VIM key bindings active)|
+|ESC | Enter normal mode (makes VIM key bindings active)|
 | hjik | Motion Commands|
 |C^F/C^B|Page Up/Page Down|
 |0/$|Start Of Line/End Of Line|
 |i/I| Enter insert mode before cursor/at start of line |
 |a/A|Enter insert mode after curser/at end of line|
 |o/O|Enter insert mode on line below/above|
+|u/C^R|undo/redo|
 |dd/dw|Erase line/ Erase Word|
 |yy|Copy line|
 |p|paste|
