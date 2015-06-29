@@ -101,12 +101,24 @@ w::
 ; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
 if (A_PriorHotkey == "d" and A_TimeSincePriorHotkey < 400)
 {
+    ;dw
     Send, {ShiftDown}
     ^{Right}
     Send, {Del}
     Send, {Shift}
     return
 }
+if (A_PriorHotkey == "c" and A_TimeSincePriorHotkey < 400)
+{
+    ;cw
+    Send, {ShiftDown}
+    ^{Right}
+    Send, {Del}
+    Send, {Shift}
+    Gosub InsertMode
+    return
+}
+; just w
 Send, ^{Right}
 return 
 b::Send, ^{Left}
