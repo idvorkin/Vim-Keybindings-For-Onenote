@@ -182,6 +182,12 @@ p::
 Send, {End}{Enter}^v
 return
 
+/::
+; Search 
+Send, ^f
+
+return
+
 ; swap case of current letter - doesn't work need to debug.
 ~::
     ; push clipboard to local variable
@@ -265,4 +271,7 @@ t::
 +X::
 +Y::
 +Z::
+.::
+'::
+;::
 return::
