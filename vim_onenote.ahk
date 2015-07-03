@@ -97,6 +97,19 @@ return
 ^r::Send, ^y
 return 
 
++G:: Send, ^{End}
+; G goto to end of document
+return
+
+g::
+; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
+if (A_PriorHotkey == "g" and A_TimeSincePriorHotkey < 400)
+{
+    ;gg - Go to start of document
+    Send, ^{Home}
+    return
+}
+
 w::
 ; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
 if (A_PriorHotkey == "d" and A_TimeSincePriorHotkey < 400)
@@ -228,7 +241,6 @@ return
 c::
 e::
 f::
-g::
 m::
 n::
 r::
@@ -236,7 +248,6 @@ s::
 t::
 +C::
 +E::
-+G::
 +H::
 +J::
 +K::
