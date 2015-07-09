@@ -97,16 +97,41 @@ return
 ^r::Send, ^y
 return 
 
++G:: Send, ^{End}
+; G goto to end of document
+return
+
+g::
+; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
+if (A_PriorHotkey == "g" and A_TimeSincePriorHotkey < 400)
+{
+    ;gg - Go to start of document
+    Send, ^{Home}
+    return
+}
+
 w::
 ; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
 if (A_PriorHotkey == "d" and A_TimeSincePriorHotkey < 400)
 {
+    ;dw
     Send, {ShiftDown}
     ^{Right}
     Send, {Del}
     Send, {Shift}
     return
 }
+if (A_PriorHotkey == "c" and A_TimeSincePriorHotkey < 400)
+{
+    ;cw
+    Send, {ShiftDown}
+    ^{Right}
+    Send, {Del}
+    Send, {Shift}
+    Gosub InsertMode
+    return
+}
+; just w
 Send, ^{Right}
 return 
 b::Send, ^{Left}
@@ -155,6 +180,12 @@ return
 ; current behavior assumes yanked with yy.
 p::
 Send, {End}{Enter}^v
+return
+
+/::
+; Search 
+Send, ^f
+
 return
 
 ; swap case of current letter - doesn't work need to debug.
@@ -216,7 +247,6 @@ return
 c::
 e::
 f::
-g::
 m::
 n::
 r::
@@ -224,7 +254,6 @@ s::
 t::
 +C::
 +E::
-+G::
 +H::
 +J::
 +K::
@@ -242,4 +271,7 @@ t::
 +X::
 +Y::
 +Z::
+.::
+'::
+;::
 return::
