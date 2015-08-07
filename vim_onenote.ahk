@@ -162,16 +162,18 @@ return
 
 +d::
 Send, {ShiftDown}{End}
+Send, ^c ; Do a yank before erasing.
 Send {Del}
 Send, {ShiftUp}
 return
 
 d::
-if (A_PriorHotkey <> "d" or A_TimeSincePriorHotkey > 400)G
+if (A_PriorHotkey <> "d" or A_TimeSincePriorHotkey > 400)
 {
     return
 }
 Send, {Home}{ShiftDown}{End}
+Send, ^c ; Do a yank before erasing.
 Send, {Del}
 Send, {Shift}
 return 
