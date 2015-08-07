@@ -30,6 +30,11 @@ Gosub InsertMode ; goto InsertMode mode on script startup
 SetTitleMatchMode 2 ;- Mode 2 is window title substring.
 #IfWinActive, OneNote ; Only apply this script to onenote.
 
+IsLastKey(key)
+{
+    return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
+}
+
 ; ESC enters Normal Mode
 ESC::
 	Suspend, Off
@@ -103,16 +108,17 @@ return
 
 g::
 ; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
-if (A_PriorHotkey == "g" and A_TimeSincePriorHotkey < 400)
+if IsLastKey("g")
 {
     ;gg - Go to start of document
     Send, ^{Home}
     return
 }
+return
 
 w::
 ; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
-if (A_PriorHotkey == "d" and A_TimeSincePriorHotkey < 400)
+if IsLastKey("d")
 {
     ;dw
     Send, {ShiftDown}
@@ -121,7 +127,7 @@ if (A_PriorHotkey == "d" and A_TimeSincePriorHotkey < 400)
     Send, {Shift}
     return
 }
-if (A_PriorHotkey == "c" and A_TimeSincePriorHotkey < 400)
+if IsLastKey("c")
 {
     ;cw
     Send, {ShiftDown}
@@ -134,6 +140,7 @@ if (A_PriorHotkey == "c" and A_TimeSincePriorHotkey < 400)
 ; just w
 Send, ^{Right}
 return 
+
 b::Send, ^{Left}
 return 
 +4::Send, {End}
@@ -151,13 +158,12 @@ return
 
 ;; TBD Design a more generic <command> <motion> pattern, for now implement yy and dd the most commonly used commands.
 y::
-if (A_PriorHotkey <> "y" or A_TimeSincePriorHotkey > 400)
+if IsLastKey("y")
 {
-    return
+    Send, {Home}{ShiftDown}{End}
+    Send, ^c
+    Send, {Shift}
 }
-Send, {Home}{ShiftDown}{End}
-Send, ^c
-Send, {Shift}
 return 
 
 +d::
@@ -168,14 +174,13 @@ Send, {ShiftUp}
 return
 
 d::
-if (A_PriorHotkey <> "d" or A_TimeSincePriorHotkey > 400)
+if IsLastKey("d")
 {
-    return
+    Send, {Home}{ShiftDown}{End}
+    Send, ^c ; Do a yank before erasing.
+    Send, {Del}
+    Send, {Shift}
 }
-Send, {Home}{ShiftDown}{End}
-Send, ^c ; Do a yank before erasing.
-Send, {Del}
-Send, {Shift}
 return 
 
 ; TODO handle regular paste , vs paste something picked up with yy
