@@ -225,6 +225,26 @@ return
 
 return
 
+;; << Outdent
+
+<::
+if IsLastKey("<")
+{
+    Send, {Home}
+    Send, +{Tab}
+}
+return
+
+;; << Outdent
+
+>::
+if IsLastKey(">")
+{
+    Send, {Home}
+    Send, {Tab}
+}
+return
+
 ; z  is the fold fold command.
 
 z::
