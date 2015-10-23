@@ -188,17 +188,20 @@ if IsLastKey("y")
 }
 return 
 
+; Cut to end of line
 +d::
 Send, {ShiftDown}{End}
 Send, ^x ; Cut instead of yank and delete
 Send, {ShiftUp}
 return
 
+; Delete current line
 d::
 if IsLastKey("d")
 {
     Send, {Home}{ShiftDown}{End}
-    Send, ^x ; Cut instead of yank and delete
+    Send, ^c ; Yank before delete, don't use cut so blank lines are deleted 
+    Send, {Del}
     Send, {Shift}
 }
 return 
