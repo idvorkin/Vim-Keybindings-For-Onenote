@@ -1,35 +1,45 @@
-; VIM Keybinds for onenote.
 ;---------------------------------------
+; Basic VIM Keybinds for onenote.
 ;---------------------------------------
 
 ;---------------------------------------
 ; Usage - Run vim_onenote.ahk, or autohotkey vim_onenote.ahk
 ;---------------------------------------
 
-; Acknolwedgements:
-; This is based on a vim autohotkey script which I can no longer find. If you find it, please tell me and I'll add it to the acknolwedgements
+;--------------------------------------------------------------------------------
+; https://github.com/idvorkin/Vim-Keybindings-For-Onenote
+;
+; Acknowledgments:
+; This is based on a vim autohotkey script which I can no longer find. If you find it, 
+; please tell me and I'll add it to the acknowledgments
 ;---------------------------------------
 
+;---------------------------------------
 ; Settings
 ;---------------------------------------
 ;#NoTrayIcon ; NoTrayIcon hides the tray icon.
 #SingleInstance Force ; SingleInstance makes the script automatically reload.
 
+;---------------------------------------
 ; The code itself.
 ;---------------------------------------
-;---------------------------------------
 
-; The VIM input model has two modes, normal mode, where you enter commands, and insert mode, where keys are inserted into the text.
+; The VIM input model has two modes, normal mode, where you enter commands, 
+; and insert mode, where keys are inserted into the text.
 ;
-; In insert mode, this script is suspended, and only the ESC hotkey is active, all other keystrokes are propogated to onenote. When ESC is pressed, the script enters normal mode.
+; In insert mode, this script is suspended, and only the ESC hotkey is active, all other 
+; keystrokes are propagated to onenote. When ESC is pressed, the script enters normal mode.
 
-; In normal mode, this script is active and all HotKeys are active. Hotkeys that need to return to insert mode, end by calling InsertMode. On script startup, InsertMode is entered.
+; In normal mode, this script is active and all HotKeys are active. Hotkeys that need to
+; return to insert mode, end by calling InsertMode. On script startup, InsertMode is entered.
 
+;--------------------------------------------------------------------------------
 Gosub InsertMode ; goto InsertMode mode on script startup
 
 SetTitleMatchMode 2 ;- Mode 2 is window title substring.
 #IfWinActive, OneNote ; Only apply this script to onenote.
 
+;--------------------------------------------------------------------------------
 IsLastKey(key)
 {
     return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
@@ -38,16 +48,19 @@ IsLastKey(key)
 ; ESC enters Normal Mode
 ESC::
 	Suspend, Off
-	ToolTip, OneNote Vim Normal Mode Active, 0, 0
+    ; send escape on through to exit from find
+    SendInput, {ESC} 
+	ToolTip, OneNote Vim Command Mode Active, 0, 0
 return
 
+;--------------------------------------------------------------------------------
 ; Return to InsertMode
 InsertMode:
-	ToolTip
-	Suspend, On
+    ToolTip
+    Suspend, On
 return
 
-
+;--------------------------------------------------------------------------------
 +i::
     SendInput, {Home}
     Gosub InsertMode
@@ -56,6 +69,7 @@ return
 i::Gosub InsertMode
 return 
 
+;--------------------------------------------------------------------------------
 ; vi left and right
 
 h::SendInput, {Left}
@@ -63,6 +77,7 @@ return
 l::SendInput, {Right}
 return 
 
+;--------------------------------------------------------------------------------
 ; vi up and down.
 ;  Onenote does some magic that blocks up/down processing. See more @ 
 ; (Onenote 2013) http://www.autohotkey.com/board/topic/74113-down-in-onenote/
@@ -70,6 +85,13 @@ return
 j::SendInput,^{down}
 return 
 k::SendInput,^{up}
+return 
+
+Return::SendInput,^{down}
+return
+
+
++x::SendInput, {BackSpace}
 return 
 
 x::SendInput, {Delete}
@@ -166,33 +188,47 @@ if IsLastKey("y")
 }
 return 
 
+; Cut to end of line
 +d::
 Send, {ShiftDown}{End}
-Send, ^c ; Do a yank before erasing.
-Send {Del}
+Send, ^x ; Cut instead of yank and delete
 Send, {ShiftUp}
 return
 
+; Delete current line
 d::
 if IsLastKey("d")
 {
     Send, {Home}{ShiftDown}{End}
-    Send, ^c ; Do a yank before erasing.
+    Send, ^c ; Yank before delete, don't use cut so blank lines are deleted 
     Send, {Del}
     Send, {Shift}
 }
 return 
 
++s::
+Send, {Home}{ShiftDown}{End}
+Send, ^x ; Cut instead of yank and delete
+Send, {ShiftUp}
+Gosub, InsertMode   
+return 
+
+return 
 ; TODO handle regular paste , vs paste something picked up with yy
 ; current behavior assumes yanked with yy.
 p::
 Send, {End}{Enter}^v
 return
 
-/::
 ; Search 
+/::
 Send, ^f
-
+Gosub InsertMode
+return
+; don't know if there is a reverse find
+?::
+Send, ^f
+Gosub InsertMode
 return
 
 ; swap case of current letter - doesn't work need to debug.
@@ -270,7 +306,9 @@ else if SingleKey = o
 }
 return
 
+;--------------------------------------------------------------------------------
 ; Eat all other keys if in command mode.
+;--------------------------------------------------------------------------------
 c::
 e::
 f::
@@ -290,15 +328,15 @@ t::
 +P::
 +Q::
 +R::
-+S::
+; +S::
 +T::
 +U::
 +V::
 +W::
-+X::
+;+X::
 +Y::
 +Z::
 .::
 '::
 ;::
-return::
+; return::
