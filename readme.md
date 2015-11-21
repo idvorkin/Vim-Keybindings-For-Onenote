@@ -1,5 +1,7 @@
 VIM keybindings for OneNote
 ====
+
+[![Join the chat at https://gitter.im/idvorkin/Vim-Keybindings-For-Onenote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/idvorkin/Vim-Keybindings-For-Onenote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 VIM keybindings for OneNote brings the efficiency of VIM to the organizing power of Onenote. 
 
 This project uses [AutoHotKey](http://www.autohotkey.com/). If you don't have autohotkey installed you can still run prebuilt executables. 
