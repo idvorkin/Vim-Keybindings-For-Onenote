@@ -231,6 +231,14 @@ Send, ^f
 Gosub InsertMode
 return
 
+; C-P => Search all notebooks.
+^p::
+Send, ^e
+; a bit weird - we're in insert mode after the search.
+GoSub InsertMode
+return 
+
+
 ; swap case of current letter - doesn't work need to debug.
 ~::
     ; push clipboard to local variable
