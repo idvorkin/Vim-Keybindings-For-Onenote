@@ -205,7 +205,7 @@ if IsLastKey("d")
 {
     Send, {Home}{ShiftDown}{End}
     Send, ^c ; Yank before delete, don't use cut so blank lines are deleted 
-    Send, {Del }
+    Send, {Del 2}
     Send, {Shift}
 }
 return 
