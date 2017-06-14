@@ -19,6 +19,10 @@
 ;---------------------------------------
 ;#NoTrayIcon ; NoTrayIcon hides the tray icon.
 #SingleInstance Force ; SingleInstance makes the script automatically reload.
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+;SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+#KeyHistory 0 ; Disables logging of keystrokes in key history
 
 ;---------------------------------------
 ; The code itself.
@@ -49,7 +53,7 @@ IsLastKey(key)
 ESC::
 	Suspend, Off
     ; send escape on through to exit from find
-    SendInput, {ESC} 
+     send {ESC} 
 	ToolTip, OneNote Vim Command Mode Active, 0, 0
 return
 
@@ -62,7 +66,7 @@ return
 
 ;--------------------------------------------------------------------------------
 +i::
-    SendInput, {Home}
+     send {Home}
     Gosub InsertMode
 return 
 
@@ -72,9 +76,9 @@ return
 ;--------------------------------------------------------------------------------
 ; vi left and right
 
-h::SendInput, {Left}
+h:: send {Left}
 return 
-l::SendInput, {Right}
+l:: send {Right}
 return 
 
 ;--------------------------------------------------------------------------------
@@ -82,28 +86,28 @@ return
 ;  Onenote does some magic that blocks up/down processing. See more @ 
 ; (Onenote 2013) http://www.autohotkey.com/board/topic/74113-down-in-onenote/
 ; (Onenote 2007) http://www.autohotkey.com/board/topic/15307-up-and-down-hotkeys-not-working-for-onenote-2007/
-j::SendInput,^{down}
+j:: send^{down}
 return 
-k::SendInput,^{up}
+k:: send^{up}
 return 
 
-Return::SendInput,^{down}
+Return:: send^{down}
 return
 
 
-+x::SendInput, {BackSpace}
++x:: send {BackSpace}
 return 
 
-x::SendInput, {Delete}
+x:: send {Delete}
 return 
 
 +a::
-SendInput, {End}
+ send {End}
 Gosub InsertMode
 return 
 
 a::
-SendInput, {Right}
+ send {Right}
 Gosub InsertMode
 return 
 
@@ -201,7 +205,7 @@ if IsLastKey("d")
 {
     Send, {Home}{ShiftDown}{End}
     Send, ^c ; Yank before delete, don't use cut so blank lines are deleted 
-    Send, {Del}
+    Send, {Del }
     Send, {Shift}
 }
 return 
@@ -306,11 +310,11 @@ hotkey c, on
 
 if SingleKey = c
 {
-    SendInput, !+-
+     send !+-
 }
 else if SingleKey = o
 {
-    SendInput, !+{+}
+     send !+{+}
 }
 return
 
