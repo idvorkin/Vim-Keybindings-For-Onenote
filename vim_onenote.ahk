@@ -134,6 +134,7 @@ r::
     ; Wait for single key to be pressed, sends that key and returns to normal
     input, inp, V E L1
     send {left}
+    gosub, NormalMode
 return
 
 ; undo
@@ -225,7 +226,7 @@ if IsLastKey("d")
 }
 return 
 
-+s::
++S::
 Send, {Home}{ShiftDown}{End}
 Send, ^x ; Cut instead of yank and delete
 Send, {ShiftUp}
@@ -245,6 +246,7 @@ return
     input, inp, E V, {escape}{return}
     send {esc}
     send {left}
+    gosub, NormalMode
 return
 ; Simulate reverse find
 ?::
@@ -254,6 +256,7 @@ return
     send +{return}
     send {esc}
     send {left}
+    gosub, NormalMode
 return
 
 ; Find motions
@@ -263,7 +266,7 @@ n::
     send {esc}
     send {left}
 return
-+n::
++N::
     Send, ^f
     send +{return}
     send {esc}
