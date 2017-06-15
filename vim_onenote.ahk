@@ -203,10 +203,10 @@ return
 d::
 if IsLastKey("d")
 {
-    Send, {Home}{ShiftDown}{End}
-    Send, ^c ; Yank before delete, don't use cut so blank lines are deleted 
-    Send, {Del 2}
-    Send, {Shift}
+    Send, {Home}{Shift down}{End}
+    Send, {Shift up}
+    Send, ^x ; Yank before delete
+    Send, {Del}
 }
 return 
 
