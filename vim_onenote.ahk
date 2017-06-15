@@ -49,12 +49,18 @@ IsLastKey(key)
     return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
 }
 
-; ESC enters Normal Mode
-ESC::
-	Suspend, Off
+;  ctrl + [, ESC enter Normal Mode.
+; Not using ctrl + c, as people may still want to use for copying.
+ESC:: gosub, NormalMode
+^[:: gosub, NormalMode
+;^c:: gosub, NormalMode
+; imap workings (eg jj) currently can't be implemented because of how 
+; insert mode works.
+
+NormalMode:
+    Suspend, Off
     ; send escape on through to exit from find
-     send {ESC} 
-	ToolTip, OneNote Vim Command Mode Active, 0, 0
+    ToolTip, OneNote Vim Command Mode Active, 0, 0
 return
 
 ;--------------------------------------------------------------------------------
@@ -66,7 +72,7 @@ return
 
 ;--------------------------------------------------------------------------------
 +i::
-     send {Home}
+    send {Home}
     Gosub InsertMode
 return 
 
