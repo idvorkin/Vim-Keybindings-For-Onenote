@@ -249,27 +249,37 @@ p::
 Send, {End}{Enter}^v
 return
 
-; Search 
+
+
+; Search actions
 /::
     Send ^f
     GoSub, InsertMode
     input, inp, E V, {escape}{return}
-    send {esc}
-    send {left}
-    gosub, NormalMode
-return
-; Simulate reverse find
-?::
-    Send, ^f
-    GoSub, InsertMode
-    input, inp, E V, {escape}{return}
+    ; Send shift return to move back one search
+    ; (the return endkey gets send through, unfortunately. )
     send +{return}
     send {esc}
     send {left}
     gosub, NormalMode
 return
 
-; Find motions
+; Simulate reverse find. Doesn't highlight the previous one,
+;  but does drop cursor there.
+?::
+    Send, ^f
+    GoSub, InsertMode
+    input, inp, E V, {escape}{return}
+    ; Send shift return to move back one search
+    ; (the return endkey gets send through, unfortunately. )
+    send +{return}
+    send +{return}
+    send {esc}
+    send {left}
+    gosub, NormalMode
+return
+
+; Next/prev search repeat
 n::
     send ^f
     send {return}
@@ -282,6 +292,7 @@ return
     send {esc}
     send {left}
 return
+
 
 ; C-P => Search all notebooks.
 ^p::
