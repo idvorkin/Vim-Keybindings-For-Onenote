@@ -121,6 +121,14 @@ Send, {End}{Enter}
 Gosub InsertMode
 return
 
+r::
+    send +{right}
+    gosub, InsertMode
+    ; Wait for single key to be pressed, sends that key and returns to normal
+    input, inp, V E L1
+    send {left}
+return
+
 ; undo
 u::Send, ^z
 return 
@@ -347,7 +355,6 @@ c::
 e::
 f::
 m::
-r::
 s::
 t::
 +C::
