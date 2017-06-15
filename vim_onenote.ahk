@@ -49,27 +49,37 @@ IsLastKey(key)
     return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
 }
 
-;  ctrl + [, ESC enter Normal Mode.
-; Not using ctrl + c, as people may still want to use for copying.
-ESC:: gosub, NormalMode
-^[:: gosub, NormalMode
-;^c:: gosub, NormalMode
-; imap workings (eg jj) currently can't be implemented because of how 
-; insert mode works.
 
-
-NormalMode:
-    Suspend, Off
-    ; send escape on through to exit from find
-    ToolTip, OneNote Vim Command Mode Active, 0, 0
-return
 
 ;--------------------------------------------------------------------------------
 ; Return to InsertMode
 InsertMode:
     ToolTip
     Suspend, On
+    hotkey, ESC, on
 return
+
+;--------------------------------------------------------------------------------
+
+;  ctrl + [, ESC enter Normal Mode.
+; Not using ctrl + c, as people may still want to use for copying.
+;^c::
+^[::
+ESC::
+    ; Is not affected by insertmode's suspend
+    suspend, permit
+    gosub NormalMode
+return
+
+; imap workings (eg jj) currently can't be implemented because of how 
+; insert mode works.
+
+
+NormalMode:
+    Suspend, Off
+    ToolTip, OneNote Vim Command Mode Active, 0, 0
+return
+
 
 ;--------------------------------------------------------------------------------
 +i::
@@ -286,27 +296,22 @@ return
     ; push clipboard to local variable
     ClipSaved := ClipboardAll
 
-        ; copy 1 charector
-        Send, {ShiftDown}{Right}
-        Send, ^c
-        Send, {Shift}
+    ; copy 1 charecter
+    Send, +{Right}
+    Send, ^c
+    Send, {left}
 
-        ; invert char
-        char_to_invert:= Substr(Clipboard, 1, 1)
-        if char_to_invert is upper
-           inverted_char := Chr(Asc(char_to_invert) + 32)
-        else if char_to_invert is lower
-           inverted_char := Chr(Asc(char_to_invert) - 32)
-        else
-           inverted_char := char_to_invert
+    ; invert char
+    if clipboard is upper
+        StringLower, Clipboard, Clipboard
+    else
+        StringUpper, Clipboard, Clipboard
+    ;paste char.
+    Send ^v{left} 
 
-        ;paste char.
-        ClipBoard := inverted_char
-        Send ^v{left}{right} 
-
-        ;restore original clipboard
-        Clipboard := ClipSaved
-        ClipWait
+    ;restore original clipboard
+    Clipboard := ClipSaved
+    ClipWait
     ClipSaved := ; free memory
 
 return
