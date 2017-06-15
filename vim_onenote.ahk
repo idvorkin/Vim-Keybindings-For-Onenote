@@ -86,12 +86,12 @@ return
 ;  Onenote does some magic that blocks up/down processing. See more @ 
 ; (Onenote 2013) http://www.autohotkey.com/board/topic/74113-down-in-onenote/
 ; (Onenote 2007) http://www.autohotkey.com/board/topic/15307-up-and-down-hotkeys-not-working-for-onenote-2007/
-j:: send^{down}
+j:: send ^{down}
 return 
-k:: send^{up}
+k:: send ^{up}
 return 
 
-Return:: send^{down}
+Return:: send ^{down}
 return
 
 
@@ -217,7 +217,6 @@ Send, {ShiftUp}
 Gosub, InsertMode   
 return 
 
-return 
 ; TODO handle regular paste , vs paste something picked up with yy
 ; current behavior assumes yanked with yy.
 p::
@@ -226,13 +225,34 @@ return
 
 ; Search 
 /::
-Send, ^f
-Gosub InsertMode
+    Send ^f
+    GoSub, InsertMode
+    input, inp, E V, {escape}{return}
+    send {esc}
+    send {left}
 return
-; don't know if there is a reverse find
+; Simulate reverse find
 ?::
-Send, ^f
-Gosub InsertMode
+    Send, ^f
+    GoSub, InsertMode
+    input, inp, E V, {escape}{return}
+    send +{return}
+    send {esc}
+    send {left}
+return
+
+; Find motions
+n::
+    send ^f
+    send {return}
+    send {esc}
+    send {left}
+return
++n::
+    Send, ^f
+    send +{return}
+    send {esc}
+    send {left}
 return
 
 ; C-P => Search all notebooks.
@@ -318,6 +338,8 @@ else if SingleKey = o
 }
 return
 
+; See https://autohotkey.com/docs/commands/Input.htm at the last example. 
+; Could be a way of implementing some commands at some point.
 ;--------------------------------------------------------------------------------
 ; Eat all other keys if in command mode.
 ;--------------------------------------------------------------------------------
@@ -325,7 +347,6 @@ c::
 e::
 f::
 m::
-n::
 r::
 s::
 t::
@@ -336,16 +357,13 @@ t::
 +K::
 +L::
 +M::
-+N::
 +P::
 +Q::
 +R::
-; +S::
 +T::
 +U::
 +V::
 +W::
-;+X::
 +Y::
 +Z::
 .::
