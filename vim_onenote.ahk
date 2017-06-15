@@ -49,7 +49,17 @@ IsLastKey(key)
     return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
 }
 
-
+SelectMotion(){
+    gosub, InsertMode
+    Input, motion, L1
+    gosub, NormalMode
+    msgbox, entered normal
+    ;if motion = i, a or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
+    send {shift down}
+    send %motion%
+    send {shift up}
+    msgbox, %motion%
+}
 
 ;--------------------------------------------------------------------------------
 ; Return to InsertMode
@@ -138,19 +148,14 @@ return
 ; (Onenote 2013) http://www.autohotkey.com/board/topic/74113-down-in-onenote/
 ; (Onenote 2007) http://www.autohotkey.com/board/topic/15307-up-and-down-hotkeys-not-working-for-onenote-2007/
 j:: send ^{down}
-return 
 k:: send ^{up}
-return 
 
 Return:: send ^{down}
-return
 
 
 +x:: send {BackSpace}
-return 
 
 x:: send {Delete}
-return 
 
 +a::
  send {End}
@@ -183,14 +188,11 @@ return
 
 ; undo
 u::Send, ^z
-return 
 ; redo.
 ^r::Send, ^y
-return 
 
-+G:: Send, ^{End}
 ; G goto to end of document
-return
++G:: Send, ^{End}
 
 g::
 ; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
@@ -225,21 +227,14 @@ if IsLastKey("c")
 }
 ; just w
 Send, ^{Right}
-return 
 
 b::Send, ^{Left}
-return 
-+4::Send, {End}
-return 
-0::Send, {Home}
-return 
-+6::Send, {Home}
-return 
-+5::Send, ^b
-return 
-^f::Send, {PgDn}
-return 
-^b::Send, {PgUp}
++4::Send, {End} ;$
+0::Send, {Home} 
++6::Send, {Home} ;^
++5::Send, ^b ;%
+^F::Send, {PgDn}
++B::Send, {PgUp}
 
 
 ;; TBD Design a more generic <command> <motion> pattern, for now implement yy and dd the most commonly used commands.
@@ -261,14 +256,17 @@ return
 
 ; Delete current line
 d::
-if IsLastKey("d")
+    if IsLastKey("d")
 {
     Send, {Home}{Shift down}{End}
     Send, {Shift up}
     Send, ^x ; Yank before delete
     Send, {Del}
 }
-return 
+else
+    SelectMotion()
+    send ^x
+return
 
 +S::
 Send, {Home}{ShiftDown}{End}
@@ -279,9 +277,7 @@ return
 
 ; TODO handle regular paste , vs paste something picked up with yy
 ; current behavior assumes yanked with yy.
-p::
-Send, {End}{Enter}^v
-return
+p::Send, {End}{Enter}^v
 
 
 
@@ -430,5 +426,4 @@ t::
 +Z::
 .::
 '::
-;::
-; return::
+`;::
