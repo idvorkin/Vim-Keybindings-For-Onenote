@@ -291,23 +291,25 @@ GoSub InsertMode
 return 
 
 
-; swap case of current letter - doesn't work need to debug.
-~::
+; swap case of current letter. Uses shift + ` (ie ~), but uses virtual code
+; because doesn't work otherwise. AHK uses ~ as special key, 
+; escaping doesn't seem to work.
++VKC0::
     ; push clipboard to local variable
     ClipSaved := ClipboardAll
 
     ; copy 1 charecter
     Send, +{Right}
     Send, ^c
-    Send, {left}
-
     ; invert char
     if clipboard is upper
         StringLower, Clipboard, Clipboard
     else
         StringUpper, Clipboard, Clipboard
     ;paste char.
-    Send ^v{left} 
+    Send %Clipboard%
+    ; Return to original position
+    Send {left}
 
     ;restore original clipboard
     Clipboard := ClipSaved
