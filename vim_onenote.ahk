@@ -49,17 +49,7 @@ IsLastKey(key)
     return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
 }
 
-SelectMotion(){
-    gosub, InsertMode
-    Input, motion, L1
-    gosub, NormalMode
-    msgbox, entered normal
-    ;if motion = i, a or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
-    send {shift down}
-    send %motion%
-    send {shift up}
-    msgbox, %motion%
-}
+
 
 ;--------------------------------------------------------------------------------
 ; Return to InsertMode
@@ -134,28 +124,77 @@ GetCursorColumn(){
     return position
 }
 
+ConvertMotionToFunctionName(letter){
+    ;StringLower, test, letter
+    ;msgbox, %test% 
+    if letter is upper
+        return s%letter%
+    else if letter = 0
+        return z
+    else
+        return letter
+}
+
+SelectMotion(){
+    gosub, InsertMode
+    Input, motion, L1
+    gosub, NormalMode
+    ;if motion = i, a or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
+    if IsLastKey(motion){
+        send {end}
+        send +{home}
+        return
+    }
+    MoveFunction := ConvertMotionToFunctionName(motion)
+    ;MsgBox, %MoveFunction%
+    send {shift down}
+    %MoveFunction%()
+    send {shift up}
+}
+
+
+w(){
+    send ^{right}
+}
+w::w()
+b(){
+    send ^{left}
+}
+b::b()
 
 ; vi left and right
+h(){ 
+    send {Left}
+}
+h::h()
 
-h:: send {Left}
-return 
-l:: send {Right}
-return 
+l(){
+    send {Right}
+}
+l::l()
 
-;--------------------------------------------------------------------------------
 ; vi up and down.
 ;  Onenote does some magic that blocks up/down processing. See more @ 
 ; (Onenote 2013) http://www.autohotkey.com/board/topic/74113-down-in-onenote/
 ; (Onenote 2007) http://www.autohotkey.com/board/topic/15307-up-and-down-hotkeys-not-working-for-onenote-2007/
-j:: send ^{down}
-k:: send ^{up}
+j(){
+    send {end}
+    send {right}
+    send {end}
+    }
+j::j()
 
-Return:: send ^{down}
+k(){
+    send {home}
+    send {left}
+    }
+k::k()
 
 
-+x:: send {BackSpace}
 
-x:: send {Delete}
++x::send {BackSpace}
+
+x::send {Delete}
 
 +a::
  send {End}
@@ -192,60 +231,61 @@ u::Send, ^z
 ^r::Send, ^y
 
 ; G goto to end of document
-+G:: Send, ^{End}
+sG(){
+    Send, ^{End}
+    }
++G::sG()
 
-g::
+g(){
 ; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
 if IsLastKey("g")
-{
     ;gg - Go to start of document
     Send, ^{Home}
-    return
 }
-return
+g::g()
 
-w::
-; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
-if IsLastKey("d")
-{
-    ;dw
-    Send, {ShiftDown}
-    ^{Right}
-    Send, {Del}
-    Send, {Shift}
-    return
-}
-if IsLastKey("c")
-{
-    ;cw
-    Send, {ShiftDown}
-    ^{Right}
-    Send, {Del}
-    Send, {Shift}
-    Gosub InsertMode
-    return
-}
-; just w
-Send, ^{Right}
+s4(){
+    Send, {End} ;$
+    }
++4::s4()
 
-b::Send, ^{Left}
-+4::Send, {End} ;$
-0::Send, {Home} 
-+6::Send, {Home} ;^
-+5::Send, ^b ;%
-^F::Send, {PgDn}
-+B::Send, {PgUp}
+z(){
+    Send, {Home} 
+    }
+0::z()
+
+s6(){
+    Send, {Home} ;^
+    }
++6::s6()
+
+s5(){
+    Send, ^b ;%
+    }
++5::s5()
+
+cF(){
+    Send, {PgDn}
+    }
+^F::cF()
+
+sB(){
+    Send, {PgUp}
+    }
++B::sB()
 
 
-;; TBD Design a more generic <command> <motion> pattern, for now implement yy and dd the most commonly used commands.
+
 y::
-if IsLastKey("y")
-{
-    Send, {Home}{ShiftDown}{End}
-    Send, ^c
-    Send, {Shift}
-}
+    SelectMotion()
+    send ^c
 return 
+
+c::
+    SelectMotion()
+    send ^x
+    gosub InsertMode
+return
 
 ; Cut to end of line
 +d::
@@ -255,17 +295,12 @@ Send, {ShiftUp}
 return
 
 ; Delete current line
+; dd handled specially, to delete newline.
 d::
-    if IsLastKey("d")
-{
-    Send, {Home}{Shift down}{End}
-    Send, {Shift up}
-    Send, ^x ; Yank before delete
-    Send, {Del}
-}
-else
     SelectMotion()
     send ^x
+    if IsLastKey("d")
+    Send, {Del}
 return
 
 +S::
@@ -402,7 +437,6 @@ return
 ;--------------------------------------------------------------------------------
 ; Eat all other keys if in command mode.
 ;--------------------------------------------------------------------------------
-c::
 e::
 f::
 m::
