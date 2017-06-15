@@ -57,6 +57,7 @@ ESC:: gosub, NormalMode
 ; imap workings (eg jj) currently can't be implemented because of how 
 ; insert mode works.
 
+
 NormalMode:
     Suspend, Off
     ; send escape on through to exit from find
