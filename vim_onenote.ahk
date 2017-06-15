@@ -91,6 +91,40 @@ i::Gosub InsertMode
 return 
 
 ;--------------------------------------------------------------------------------
+PrepareClipboard(){
+    ; push clipboard to local variable
+    ClipSaved := ClipboardAll
+    ; Clear clipboard to avoid errors
+    Clipboard :=
+}
+
+Copy(){
+    PrepareClipboard()
+    send ^c
+    ClipWait
+}
+
+Paste(){
+    Send %Clipboard%
+    RestoreClipboard()
+}
+
+RestoreClipboard(){
+    ;restore original clipboard
+    Clipboard := ClipSaved
+    ClipWait
+    ClipSaved := ; free memory
+}
+
+GetCursorColumn(){
+    send +{home}
+    Copy()
+    position := strLen(Clipboard)
+    RestoreClipboard()
+    return position
+}
+
+
 ; vi left and right
 
 h:: send {Left}
@@ -306,30 +340,20 @@ return
 ; because doesn't work otherwise. AHK uses ~ as special key, 
 ; escaping doesn't seem to work.
 +VKC0::
-    ; push clipboard to local variable
-    ClipSaved := ClipboardAll
-    ; Clear clipboard to avoid errors
-    Clipboard :=
     ; copy 1 charecter
     Send, +{Right}
-    Send, ^c
-    ClipWait
+    COpy()
 
     ; invert char
     if clipboard is upper
         StringLower, Clipboard, Clipboard
     else
         StringUpper, Clipboard, Clipboard
-    ;paste char.
-    Send %Clipboard%
+
+    Paste()
     ; Return to original position
     Send {left}
-
-    ;restore original clipboard
-    Clipboard := ClipSaved
-    ClipWait
-    ClipSaved := ; free memory
-
+    
 return
 
 ;; << Outdent
