@@ -112,7 +112,7 @@ Paste(){
 RestoreClipboard(){
     ;restore original clipboard
     Clipboard := ClipSaved
-    ClipWait
+    ;ClipWait
     ClipSaved := ; free memory
 }
 
