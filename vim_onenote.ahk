@@ -49,7 +49,17 @@ IsLastKey(key)
     return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
 }
 
-
+SelectMotion(){
+    gosub, InsertMode
+    Input, motion, L1
+    gosub, NormalMode
+    msgbox, entered normal
+    ;if motion = i, a or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
+    send {shift down}
+    send %motion%
+    send {shift up}
+    msgbox, %motion%
+}
 
 ;--------------------------------------------------------------------------------
 ; Return to InsertMode
@@ -246,14 +256,17 @@ return
 
 ; Delete current line
 d::
-if IsLastKey("d")
+    if IsLastKey("d")
 {
     Send, {Home}{Shift down}{End}
     Send, {Shift up}
     Send, ^x ; Yank before delete
     Send, {Del}
 }
-return 
+else
+    SelectMotion()
+    send ^x
+return
 
 +S::
 Send, {Home}{ShiftDown}{End}
