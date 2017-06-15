@@ -308,10 +308,13 @@ return
 +VKC0::
     ; push clipboard to local variable
     ClipSaved := ClipboardAll
-
+    ; Clear clipboard to avoid errors
+    Clipboard :=
     ; copy 1 charecter
     Send, +{Right}
     Send, ^c
+    ClipWait
+
     ; invert char
     if clipboard is upper
         StringLower, Clipboard, Clipboard
