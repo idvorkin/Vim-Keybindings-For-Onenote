@@ -25,6 +25,10 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 #KeyHistory 0 ; Disables logging of keystrokes in key history
 #Warn ; Provides code warnings when running
 
+SetTitleMatchMode 2 ;- Mode 2 is window title substring.
+;#IfWinActive, OneNote ; Only apply this script to onenote. Doesn't seem to work
+; Only works in (seemingly) the Onenote text interface. WORKS
+#IfWinActive ahk_class Framework::CFrame 
 ;---------------------------------------
 ; The code itself.
 ;---------------------------------------
@@ -41,14 +45,13 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 ;--------------------------------------------------------------------------------
 Gosub InsertMode ; goto InsertMode mode on script startup
 
-SetTitleMatchMode 2 ;- Mode 2 is window title substring.
-#IfWinActive, OneNote ; Only apply this script to onenote.
 
 ;--------------------------------------------------------------------------------
 ; Return to InsertMode
 InsertMode:
     ToolTip
     Suspend, On
+    InNormalMode := False
     hotkey, ESC, on
 return
 
@@ -70,7 +73,7 @@ j::
     suspend, permit
     if InNormalMode
         j()
-    else if IsLastKey(j)
+    else if IsLastKey("j")
         gosub NormalMode
     else
         send j
@@ -97,7 +100,7 @@ PrepareClipboard(){
 Copy(){
     PrepareClipboard()
     send ^c
-    ClipWait
+    ClipWait, 0.5
 }
 
 Paste(){
@@ -114,7 +117,13 @@ RestoreClipboard(){
 }
 
 GetCursorColumn(){
+    StartC := A_CaretX
     send +{home}
+    ; Saves clipwait having to time out on empty selection if start of line.
+    ; Not working. Caret variable seems to perform unexpectedly.
+    ;if (StartC = %A_CaretX%){
+        ;return 0
+    ;}
     Copy()
     position := strLen(Clipboard)
     RestoreClipboard()
@@ -216,26 +225,36 @@ l::l()
 ;    send {right}
 ;    send {end}
 ;    }
-j::j()
+;j::j()
 
-k(){
-    send {home}
-    send {left}
-    }
-k::k()
+;k(){
+    ;send {home}
+    ;send {left}
+    ;}
+;k::k()
 
 ; Alternate, more accurate up and down. Much more complicated though, may be
 ; slow on slow computers.
 j(){
     column := GetCursorColumn()
-    msgbox, %column%
     send {end}{right}{end}
-    if GetCursorColumn() > column
+    if GetCursorColumn() > column{
         send {home}
         ; Send right %column% times.
         send {right %column%}
+    }
 }
 
+k(){
+    column := GetCursorColumn()
+    send {home}{Left}    
+    if GetCursorColumn() > column{
+        send {home}
+        ; Send right %column% times.
+        send {right %column%}
+    }
+}
+k::k()
 
 
 +x::send {BackSpace}
@@ -256,10 +275,9 @@ sG(){
 +G::sG()
 
 g(){
-; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
-if IsLastKey("g")
-    ;gg - Go to start of document
-    Send, ^{Home}
+    if IsLastKey("g")
+        ;gg - Go to start of document
+        Send, ^{Home}
 }
 g::g()
 
@@ -300,6 +318,7 @@ y::
     send ^c
 return 
 
++C::send {c 2}
 c::
     SelectMotion()
     send ^x
@@ -309,7 +328,7 @@ return
 ; Cut to end of line
 +d::
 Send, {ShiftDown}{End}
-Send, ^x ; Cut instead of yank and delete
+Send, ^x
 Send, {ShiftUp}
 return
 
@@ -461,7 +480,6 @@ f::
 m::
 s::
 t::
-+C::
 +E::
 +H::
 +J::
