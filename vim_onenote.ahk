@@ -45,14 +45,6 @@ SetTitleMatchMode 2 ;- Mode 2 is window title substring.
 #IfWinActive, OneNote ; Only apply this script to onenote.
 
 ;--------------------------------------------------------------------------------
-IsLastKey(key)
-{
-    return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
-}
-
-
-
-;--------------------------------------------------------------------------------
 ; Return to InsertMode
 InsertMode:
     ToolTip
@@ -72,14 +64,14 @@ ESC::
     gosub NormalMode
 return
 
-; imap workings (eg jj) currently can't be implemented because of how 
-; insert mode works.
+; jj has to be implemented differently because of how insert mode works.
+; This also fires the function for moving down.
 j::
     suspend, permit
-    if IsLastKey(j)
-        gosub NormalMode
-    else if InNormalMode
+    if InNormalMode
         j()
+    else if IsLastKey(j)
+        gosub NormalMode
     else
         send j
 
@@ -89,17 +81,12 @@ NormalMode:
     ToolTip, OneNote Vim Command Mode Active, 0, 0
 return
 
-
 ;--------------------------------------------------------------------------------
-+i::
-    send {Home}
-    Gosub InsertMode
-return 
+IsLastKey(key)
+{
+    return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
+}
 
-i::Gosub InsertMode
-return 
-
-;--------------------------------------------------------------------------------
 PrepareClipboard(){
     ; push clipboard to variable
     global ClipSaved := ClipboardAll
@@ -162,6 +149,43 @@ SelectMotion(){
     send {shift up}
 }
 
+;--------------------------------------------------------------------------------
++i::
+    send {Home}
+    Gosub InsertMode
+return 
+
+i::Gosub InsertMode
+ 
++a::
+    send {End}
+    Gosub InsertMode
+return 
+
+a::
+    send {Right}
+    Gosub InsertMode
+return 
+
++o::
+    Send, {home}^{up}{End}{Enter}
+    Gosub InsertMode
+return
+
+o::
+    Send, {End}{Enter}
+    Gosub InsertMode
+return
+
+r::
+    send +{right}
+    gosub, InsertMode
+    ; Wait for single key to be pressed, sends that key and returns to normal
+    input, inp, V E L1
+    send {left}
+    gosub, NormalMode
+return
+;--------------------------------------------------------------------------------
 
 w(){
     send ^{right}
@@ -218,34 +242,7 @@ j(){
 
 x::send {Delete}
 
-+a::
- send {End}
-Gosub InsertMode
-return 
 
-a::
- send {Right}
-Gosub InsertMode
-return 
-
-+o::
-Send, {home}^{up}{End}{Enter}
-Gosub InsertMode
-return
-
-o::
-Send, {End}{Enter}
-Gosub InsertMode
-return
-
-r::
-    send +{right}
-    gosub, InsertMode
-    ; Wait for single key to be pressed, sends that key and returns to normal
-    input, inp, V E L1
-    send {left}
-    gosub, NormalMode
-return
 
 ; undo
 u::Send, ^z
