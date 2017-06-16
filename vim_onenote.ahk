@@ -23,6 +23,7 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 ;SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #KeyHistory 0 ; Disables logging of keystrokes in key history
+#Warn ; Provides code warnings when running
 
 ;---------------------------------------
 ; The code itself.
@@ -92,8 +93,8 @@ return
 
 ;--------------------------------------------------------------------------------
 PrepareClipboard(){
-    ; push clipboard to local variable
-    ClipSaved := ClipboardAll
+    ; push clipboard to variable
+    global ClipSaved := ClipboardAll
     ; Clear clipboard to avoid errors
     Clipboard :=
 }
@@ -111,6 +112,7 @@ Paste(){
 
 RestoreClipboard(){
     ;restore original clipboard
+    global ClipSaved
     Clipboard := ClipSaved
     ;ClipWait
     ClipSaved := ; free memory
@@ -177,11 +179,11 @@ l::l()
 ;  Onenote does some magic that blocks up/down processing. See more @ 
 ; (Onenote 2013) http://www.autohotkey.com/board/topic/74113-down-in-onenote/
 ; (Onenote 2007) http://www.autohotkey.com/board/topic/15307-up-and-down-hotkeys-not-working-for-onenote-2007/
-j(){
-    send {end}
-    send {right}
-    send {end}
-    }
+;j(){
+;    send {end}
+;    send {right}
+;    send {end}
+;    }
 j::j()
 
 k(){
@@ -189,6 +191,18 @@ k(){
     send {left}
     }
 k::k()
+
+; Alternate, more accurate up and down. Much more complicated though, may be
+; slow on slow computers.
+j(){
+    column := GetCursorColumn()
+    msgbox, %column%
+    send {end}{right}{end}
+    if GetCursorColumn() > column
+        send {home}
+        ; Send right %column% times.
+        send {right %column%}
+}
 
 
 
