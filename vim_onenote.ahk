@@ -90,7 +90,7 @@ IsLastKey(key)
     return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
 }
 
-PrepareClipboard(){
+SaveClipboard(){
     ; push clipboard to variable
     global ClipSaved := ClipboardAll
     ; Clear clipboard to avoid errors
@@ -98,7 +98,7 @@ PrepareClipboard(){
 }
 
 Copy(){
-    PrepareClipboard()
+    SaveClipboard()
     send ^c
     ClipWait, 0.5
 }
@@ -134,18 +134,21 @@ ConvertMotionToFunctionName(letter){
     ;StringLower, test, letter
     ;msgbox, %test% 
     if letter is upper
-        return s%letter%
+        ; Return "s" + letter, to map to shift+key function name.
+        return shift%letter%
     else if letter = 0
-        return z
+        return zero
     else
         return letter
 }
 
-SelectMotion(){
+InputMotionAndMakeItSelection(){
     gosub, InsertMode
     Input, motion, L1
     gosub, NormalMode
-    ;if motion = i, a or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
+    ;TODO: if motion = i, a or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
+    ; Handles cc, dd, etc.
+    ; dd has additional logic within own function, relies on this though.
     if IsLastKey(motion){
         send {end}
         send +{home}
@@ -269,10 +272,10 @@ u::Send, ^z
 ^r::Send, ^y
 
 ; G goto to end of document
-sG(){
+shiftG(){
     Send, ^{End}
     }
-+G::sG()
++G::shiftG()
 
 g(){
     if IsLastKey("g")
@@ -281,46 +284,47 @@ g(){
 }
 g::g()
 
-s4(){
+shift4(){
     Send, {End} ;$
     }
-+4::s4()
++4::shift4()
 
 z(){
     Send, {Home} 
     }
 0::z()
 
-s6(){
+shift6(){
     Send, {Home} ;^
     }
-+6::s6()
++6::shift6()
 
-s5(){
+shift5(){
     Send, ^b ;%
     }
-+5::s5()
++5::shift5()
 
-cF(){
+ctrlF(){
     Send, {PgDn}
     }
-^F::cF()
+^F::ctrlF()
 
-sB(){
+shiftB(){
     Send, {PgUp}
     }
-+B::sB()
++B::shiftB()
 
 
 
 y::
-    SelectMotion()
+    InputMotionAndMakeItSelection()
     send ^c
 return 
 
+; Emulates cc
 +C::send {c 2}
 c::
-    SelectMotion()
+    InputMotionAndMakeItSelection()
     send ^x
     gosub InsertMode
 return
@@ -335,17 +339,17 @@ return
 ; Delete current line
 ; dd handled specially, to delete newline.
 d::
-    SelectMotion()
+    InputMotionAndMakeItSelection()
     send ^x
     if IsLastKey("d")
     Send, {Del}
 return
 
 +S::
-Send, {Home}{ShiftDown}{End}
-Send, ^x ; Cut instead of yank and delete
-Send, {ShiftUp}
-Gosub, InsertMode   
+    Send, {Home}{ShiftDown}{End}
+    Send, ^x ; Cut instead of yank and delete
+    Send, {ShiftUp}
+    Gosub, InsertMode   
 return 
 
 ; TODO handle regular paste , vs paste something picked up with yy
@@ -358,9 +362,11 @@ p::Send, {End}{Enter}^v
 /::
     Send ^f
     GoSub, InsertMode
+    ; V option means input is passed through. Unfortunately, this includes return.
+    ; E may or may not do anything. There for reliability.
     input, inp, E V, {escape}{return}
     ; Send shift return to move back one search
-    ; (the return endkey gets send through, unfortunately. )
+    ; (the return key sent through to exit moves you forward once too many times. )
     send +{return}
     send {esc}
     send {left}
@@ -372,9 +378,11 @@ return
 ?::
     Send, ^f
     GoSub, InsertMode
+    ; V option means input is passed through. Unfortunately, this includes return.
+    ; E may or may not do anything. There for reliability.
     input, inp, E V, {escape}{return}
     ; Send shift return to move back one search
-    ; (the return endkey gets send through, unfortunately. )
+    ; (the return key sent through to exit moves you forward once too many times. )
     send +{return}
     send +{return}
     send {esc}
@@ -400,8 +408,8 @@ return
 ; C-P => Search all notebooks.
 ^p::
 Send, ^e
-; a bit weird - we're in insert mode after the search.
-GoSub InsertMode
+    ; a bit weird - we're in insert mode after the search.
+    GoSub InsertMode
 return 
 
 
@@ -411,7 +419,7 @@ return
 +VKC0::
     ; copy 1 charecter
     Send, +{Right}
-    COpy()
+    Copy()
 
     ; invert char
     if clipboard is upper
