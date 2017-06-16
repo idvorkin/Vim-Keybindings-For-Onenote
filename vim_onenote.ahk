@@ -128,6 +128,11 @@ GetCursorColumn(){
     Copy()
     position := strLen(Clipboard)
     RestoreClipboard()
+    if position != 0
+    {
+        ; Deselect selection
+        send {right}{left}
+    }
     return position
 }
 
@@ -152,7 +157,7 @@ InputMotionAndSelect(){
     gosub, NormalMode
     ;TODO: if motion = i, a or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
     ; Handles cc, dd, etc.
-    ; dd has additional logic within own function, relies on this though.
+    ; dd has additional logic within own function, still relies on this though.
     if IsLastKey(motion){
         send {end}
         send +{home}
@@ -243,7 +248,6 @@ l::l()
 ; Alternate, more accurate up and down. Much more complicated though, may be
 ; slow on slow computers.
 ; TODO: Fix column selection to check if at start of line. 
-; Currenly selects whole line. Doesn't properly detect.
 j(){
     column := GetCursorColumn()
     send {end}{right}{end}
