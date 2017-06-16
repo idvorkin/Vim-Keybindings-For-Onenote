@@ -74,10 +74,18 @@ return
 
 ; imap workings (eg jj) currently can't be implemented because of how 
 ; insert mode works.
-
+j::
+    suspend, permit
+    if IsLastKey(j)
+        gosub NormalMode
+    else if InNormalMode
+        j()
+    else
+        send j
 
 NormalMode:
     Suspend, Off
+    global InNormalMode := True
     ToolTip, OneNote Vim Command Mode Active, 0, 0
 return
 
