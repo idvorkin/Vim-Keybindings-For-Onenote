@@ -69,6 +69,7 @@ return
 
 ; jj has to be implemented differently because of how insert mode works.
 ; This also fires the function for moving down.
+; Bugged. Currenly fires after only 1 j, but still sends that j. Grr.
 j::
     suspend, permit
     if InNormalMode
@@ -134,15 +135,18 @@ ConvertMotionToFunctionName(letter){
     ;StringLower, test, letter
     ;msgbox, %test% 
     if letter is upper
+    {
         ; Return "s" + letter, to map to shift+key function name.
-        return shift%letter%
+        letter = shift%letter%
+        return letter
+    }
     else if letter = 0
         return zero
     else
         return letter
 }
 
-InputMotionAndMakeItSelection(){
+InputMotionAndSelect(){
     gosub, InsertMode
     Input, motion, L1
     gosub, NormalMode
@@ -155,7 +159,7 @@ InputMotionAndMakeItSelection(){
         return
     }
     MoveFunction := ConvertMotionToFunctionName(motion)
-    ;MsgBox, %MoveFunction%
+    MsgBox, %MoveFunction%
     send {shift down}
     %MoveFunction%()
     send {shift up}
@@ -238,6 +242,8 @@ l::l()
 
 ; Alternate, more accurate up and down. Much more complicated though, may be
 ; slow on slow computers.
+; TODO: Fix column selection to check if at start of line. 
+; Currenly selects whole line. Doesn't properly detect.
 j(){
     column := GetCursorColumn()
     send {end}{right}{end}
@@ -317,14 +323,14 @@ shiftB(){
 
 
 y::
-    InputMotionAndMakeItSelection()
+    InputMotionAndSelect()
     send ^c
 return 
 
 ; Emulates cc
 +C::send {c 2}
 c::
-    InputMotionAndMakeItSelection()
+    InputMotionAndSelect()
     send ^x
     gosub InsertMode
 return
@@ -339,7 +345,7 @@ return
 ; Delete current line
 ; dd handled specially, to delete newline.
 d::
-    InputMotionAndMakeItSelection()
+    InputMotionAndSelect()
     send ^x
     if IsLastKey("d")
     Send, {Del}
