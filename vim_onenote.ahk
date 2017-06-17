@@ -391,9 +391,11 @@ d::
 return
 
 s::
-    InputMotionAndSelect()
-    Send, ^x ; Cut instead of yank and delete
-    Gosub, InsertMode   
+    send +{right}
+    gosub, InsertMode
+    ; Wait for single key to be pressed, sends that key
+    input, inp, V E L1
+    send {left}
 return 
 
 +S::
