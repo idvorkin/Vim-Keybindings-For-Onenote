@@ -400,7 +400,8 @@ return
 
 ; TODO handle regular paste , vs paste something picked up with yy
 ; current behavior assumes yanked with yy.
-p::Send, {End}{Enter}^v
+; Esc is sent to remove paste options bar.
+p::Send {End}{Enter}^v{esc}
 
 
 
