@@ -364,7 +364,7 @@ y::
     InputMotionAndSelect()
     send ^c
     ; Deselect
-    send {left}{right}
+    send {left}
 return 
 
 ; Emulates cc
@@ -450,6 +450,20 @@ return
     send {left}
 return
 
+; Numbers will be used to repeat motions.
+1::
+2::
+3::
+4::
+5::
+6::
+7::
+8::
+9::
+    InputMotionAndSelect(A_ThisHotkey, 1)
+    ;Deselect
+    send {right}{left}
+return
 
 ; C-P => Search all notebooks.
 ^p::
