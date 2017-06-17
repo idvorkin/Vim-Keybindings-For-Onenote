@@ -138,10 +138,9 @@ GetCursorColumn(){
 
 ConvertMotionToFunctionName(letter){
     ;StringLower, test, letter
-    ;msgbox, %test% 
     if letter is upper
     {
-        ; Return "s" + letter, to map to shift+key function name.
+        ; Return "s" + letter, to map to shift+key function name, eg shiftG().
         letter = shift%letter%
         return letter
     }
@@ -376,7 +375,7 @@ c::
 return
 
 ; Cut to end of line
-+d::
++D::
 Send, {ShiftDown}{End}
 Send, ^x
 Send, {ShiftUp}
@@ -390,6 +389,12 @@ d::
     if IsLastKey("d")
     Send, {Del}
 return
+
+s::
+    InputMotionAndSelect()
+    Send, ^x ; Cut instead of yank and delete
+    Gosub, InsertMode   
+return 
 
 +S::
     Send, {Home}{ShiftDown}{End}
