@@ -151,23 +151,57 @@ ConvertMotionToFunctionName(letter){
         return letter
 }
 
-InputMotionAndSelect(){
+; Params are optional, with default values.
+InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0){
     gosub, InsertMode
+    ; Get next typed character, then continue
     Input, motion, L1
     gosub, NormalMode
-    ;TODO: if motion = i, a or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
+    ;TODO: if motion = i, a g, or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
+    ; if motion in "iag" Or motion is Integer
+    ; Cannot use OR with in/is.
+    if motion is Integer
+    {
+        ; If this is first number, reduce by one to prepare for addition.
+        if RepeatDigitDepth = 1
+            Repeat--
+        ; Update repeat with next digit.
+        Repeat :=(Repeat*10**RepeatDigitDepth + Motion)
+        ; The params account for if another number is entered
+        ; (I.e., more than 1 digit count)
+        InputMotionAndSelect(Repeat, ++RepeatDigitDepth)
+    }
+    else if motion in "iag"
+    {
+    ;     if motion = "i"
+    ;     {
+    ;         ; TODO inner()
+    ;         InputMotionAndSelect()
+    ;         ; Pass the motion in, have a default param in this function? Adds motions to list?
+    ;     }else if motion = "a"
+    ;     {
+    ;         ; TODO outer/a (word)
+    ;         InputMotionAndSelect()
+    ;     }else if motion = "g"
+    ;     {
+    ;         ; expect user is about to type another g (to go to start of doc)
+    ;     }
+    ; }
+    }
     ; Handles cc, dd, etc.
     ; dd has additional logic within own function, still relies on this though.
-    if IsLastKey(motion){
+    else if IsLastKey(motion){
         send {end}
         send +{home}
         return
+    }else
+    loop %Repeat%{
+        MoveFunction := ConvertMotionToFunctionName(motion)
+        send {shift down}
+        ; Autohotkey allows dynamic functions (called by var name)
+        %MoveFunction%()
+        send {shift up}
     }
-    MoveFunction := ConvertMotionToFunctionName(motion)
-    MsgBox, %MoveFunction%
-    send {shift down}
-    %MoveFunction%()
-    send {shift up}
 }
 
 ;--------------------------------------------------------------------------------
@@ -329,6 +363,8 @@ shiftB(){
 y::
     InputMotionAndSelect()
     send ^c
+    ; Deselect
+    send {left}{right}
 return 
 
 ; Emulates cc
