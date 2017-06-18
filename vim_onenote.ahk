@@ -19,7 +19,16 @@
 ;---------------------------------------
 ;#NoTrayIcon ; NoTrayIcon hides the tray icon.
 #SingleInstance Force ; SingleInstance makes the script automatically reload.
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+;SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+#KeyHistory 0 ; Disables logging of keystrokes in key history
+#Warn ; Provides code warnings when running
 
+SetTitleMatchMode 2 ;- Mode 2 is window title substring.
+;#IfWinActive, OneNote ; Only apply this script to onenote. Doesn't seem to work
+; Only works in (seemingly) the Onenote text interface. WORKS
+#IfWinActive ahk_class Framework::CFrame 
 ;---------------------------------------
 ; The code itself.
 ;---------------------------------------
@@ -36,8 +45,45 @@
 ;--------------------------------------------------------------------------------
 Gosub InsertMode ; goto InsertMode mode on script startup
 
-SetTitleMatchMode 2 ;- Mode 2 is window title substring.
-#IfWinActive, OneNote ; Only apply this script to onenote.
+
+;--------------------------------------------------------------------------------
+; Return to InsertMode
+InsertMode:
+    ToolTip
+    Suspend, On
+    InNormalMode := False
+    hotkey, ESC, on
+return
+
+;--------------------------------------------------------------------------------
+
+;  ctrl + [, ESC enter Normal Mode.
+; Not using ctrl + c, as people may still want to use for copying.
+;^c::
+^[::
+ESC::
+    ; Is not affected by insertmode's suspend
+    suspend, permit
+    gosub NormalMode
+return
+
+; jj has to be implemented differently because of how insert mode works.
+; This also fires the function for moving down.
+; Bugged. Currenly fires after only 1 j, but still sends that j. Grr.
+j::
+    suspend, permit
+    if InNormalMode
+        j()
+    else if IsLastKey("j")
+        gosub NormalMode
+    else
+        send j
+
+NormalMode:
+    Suspend, Off
+    global InNormalMode := True
+    ToolTip, OneNote Vim Command Mode Active, 0, 0
+return
 
 ;--------------------------------------------------------------------------------
 IsLastKey(key)
@@ -45,228 +91,418 @@ IsLastKey(key)
     return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
 }
 
-; ESC enters Normal Mode
-ESC::
-	Suspend, Off
-    ; send escape on through to exit from find
-    SendInput, {ESC} 
-	ToolTip, OneNote Vim Command Mode Active, 0, 0
-return
+SaveClipboard(){
+    ; push clipboard to variable
+    global ClipSaved := ClipboardAll
+    ; Clear clipboard to avoid errors
+    Clipboard :=
+}
 
-;--------------------------------------------------------------------------------
-; Return to InsertMode
-InsertMode:
-    ToolTip
-    Suspend, On
-return
+Copy(){
+    SaveClipboard()
+    send ^c
+    ClipWait, 0.5
+}
+
+Paste(){
+    Send %Clipboard%
+    RestoreClipboard()
+}
+
+RestoreClipboard(){
+    ;restore original clipboard
+    global ClipSaved
+    Clipboard := ClipSaved
+    ;ClipWait
+    ClipSaved := ; free memory
+}
+
+GetCursorColumn(){
+    StartC := A_CaretX
+    send +{home}
+    ; Saves clipwait having to time out on empty selection if start of line.
+    ; Not working. Caret variable seems to perform unexpectedly.
+    ;if (StartC = %A_CaretX%){
+        ;return 0
+    ;}
+    Copy()
+    position := strLen(Clipboard)
+    RestoreClipboard()
+    if position != 0
+    {
+        ; Deselect selection
+        send {right}{left}
+    }
+    return position
+}
+
+ConvertMotionToFunctionName(letter){
+    ;StringLower, test, letter
+    if letter is upper
+    {
+        ; Return "s" + letter, to map to shift+key function name, eg shiftG().
+        letter = shift%letter%
+        return letter
+    }
+    else if letter = 0
+        return zero
+    else
+        return letter
+}
+
+; Params are optional, with default values.
+InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0){
+    gosub, InsertMode
+    ; Get next typed character, then continue
+    Input, motion, L1
+    gosub, NormalMode
+    ;TODO: if motion = i, a g, or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
+    ; if motion in "iag" Or motion is Integer
+    ; Cannot use OR with in/is.
+    if motion is Integer
+    {
+        ; If this is first number, reduce by one to prepare for addition.
+        if RepeatDigitDepth = 1
+            Repeat--
+        ; Update repeat with next digit.
+        Repeat :=(Repeat*10**RepeatDigitDepth + Motion)
+        ; The params account for if another number is entered
+        ; (I.e., more than 1 digit count)
+        InputMotionAndSelect(Repeat, ++RepeatDigitDepth)
+    }
+    else if motion in "iag"
+    {
+    ;     if motion = "i"
+    ;     {
+    ;         ; TODO inner()
+    ;         InputMotionAndSelect()
+    ;         ; Pass the motion in, have a default param in this function? Adds motions to list?
+    ;     }else if motion = "a"
+    ;     {
+    ;         ; TODO outer/a (word)
+    ;         InputMotionAndSelect()
+    ;     }else if motion = "g"
+    ;     {
+    ;         ; expect user is about to type another g (to go to start of doc)
+    ;     }
+    ; }
+    }
+    ; Handles cc, dd, etc.
+    ; dd has additional logic within own function, still relies on this though.
+    else if IsLastKey(motion){
+        send {end}
+        send +{home}
+        return
+    }else
+    loop %Repeat%{
+        MoveFunction := ConvertMotionToFunctionName(motion)
+        send {shift down}
+        ; Autohotkey allows dynamic functions (called by var name)
+        %MoveFunction%()
+        send {shift up}
+    }
+}
 
 ;--------------------------------------------------------------------------------
 +i::
-    SendInput, {Home}
+    send {Home}
     Gosub InsertMode
 return 
 
 i::Gosub InsertMode
+ 
++a::
+    send {End}
+    Gosub InsertMode
 return 
 
+a::
+    send {Right}
+    Gosub InsertMode
+return 
+
++o::
+    Send, {home}^{up}{End}{Enter}
+    Gosub InsertMode
+return
+
+o::
+    Send, {End}{Enter}
+    Gosub InsertMode
+return
+
+r::
+    send +{right}
+    gosub, InsertMode
+    ; Wait for single key to be pressed, sends that key and returns to normal
+    input, inp, V E L1
+    send {left}
+    gosub, NormalMode
+return
 ;--------------------------------------------------------------------------------
+
+w(){
+    send ^{right}
+}
+w::w()
+b(){
+    send ^{left}
+}
+b::b()
+e(){
+    send ^{right}{left}
+}
+e::e()
+
 ; vi left and right
+h(){ 
+    send {Left}
+}
+h::h()
 
-h::SendInput, {Left}
-return 
-l::SendInput, {Right}
-return 
+l(){
+    send {Right}
+}
+l::l()
 
-;--------------------------------------------------------------------------------
 ; vi up and down.
 ;  Onenote does some magic that blocks up/down processing. See more @ 
 ; (Onenote 2013) http://www.autohotkey.com/board/topic/74113-down-in-onenote/
 ; (Onenote 2007) http://www.autohotkey.com/board/topic/15307-up-and-down-hotkeys-not-working-for-onenote-2007/
-j::SendInput,^{down}
-return 
-k::SendInput,^{up}
-return 
+;j(){
+;    send {end}
+;    send {right}
+;    send {end}
+;    }
+;j::j()
 
-Return::SendInput,^{down}
-return
+;k(){
+    ;send {home}
+    ;send {left}
+    ;}
+;k::k()
+
+; Alternate, more accurate up and down. Much more complicated though, may be
+; slow on slow computers.
+; TODO: Fix column selection to check if at start of line. 
+j(){
+    column := GetCursorColumn()
+    send {end}{right}{end}
+    if GetCursorColumn() > column{
+        send {home}
+        ; Send right %column% times.
+        send {right %column%}
+    }
+}
+
+k(){
+    column := GetCursorColumn()
+    send {home}{Left}    
+    if GetCursorColumn() > column{
+        send {home}
+        ; Send right %column% times.
+        send {right %column%}
+    }
+}
+k::k()
 
 
-+x::SendInput, {BackSpace}
-return 
++x::send {BackSpace}
 
-x::SendInput, {Delete}
-return 
+x::send {Delete}
 
-+a::
-SendInput, {End}
-Gosub InsertMode
-return 
 
-a::
-SendInput, {Right}
-Gosub InsertMode
-return 
-
-+o::
-Send, {home}^{up}{End}{Enter}
-Gosub InsertMode
-return
-
-o::
-Send, {End}{Enter}
-Gosub InsertMode
-return
 
 ; undo
 u::Send, ^z
-return 
 ; redo.
 ^r::Send, ^y
-return 
 
-+G:: Send, ^{End}
 ; G goto to end of document
-return
+shiftG(){
+    Send, ^{End}
+    }
++G::shiftG()
 
-g::
-; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
-if IsLastKey("g")
-{
-    ;gg - Go to start of document
-    Send, ^{Home}
-    return
+g(){
+    if IsLastKey("g")
+        ;gg - Go to start of document
+        Send, ^{Home}
 }
-return
+g::g()
 
-w::
-; TBD - Design a more generic way to implement the <command> <motion> pattern. For now hardcode dw. 
-if IsLastKey("d")
-{
-    ;dw
-    Send, {ShiftDown}
-    ^{Right}
-    Send, {Del}
-    Send, {Shift}
-    return
-}
-if IsLastKey("c")
-{
-    ;cw
-    Send, {ShiftDown}
-    ^{Right}
-    Send, {Del}
-    Send, {Shift}
-    Gosub InsertMode
-    return
-}
-; just w
-Send, ^{Right}
-return 
+shift4(){
+    Send, {End} ;$
+    }
++4::shift4()
 
-b::Send, ^{Left}
-return 
-+4::Send, {End}
-return 
-0::Send, {Home}
-return 
-+6::Send, {Home}
-return 
-+5::Send, ^b
-return 
-^f::Send, {PgDn}
-return 
-^b::Send, {PgUp}
+z(){
+    Send, {Home} 
+    }
+0::z()
+
+shift6(){
+    Send, {Home} ;^
+    }
++6::shift6()
+
+shift5(){
+    Send, ^b ;%
+    }
++5::shift5()
+
+ctrlF(){
+    Send, {PgDn}
+    }
+^F::ctrlF()
+
+shiftB(){
+    Send, {PgUp}
+    }
++B::shiftB()
 
 
-;; TBD Design a more generic <command> <motion> pattern, for now implement yy and dd the most commonly used commands.
+
 y::
-if IsLastKey("y")
-{
-    Send, {Home}{ShiftDown}{End}
-    Send, ^c
-    Send, {Shift}
-}
+    InputMotionAndSelect()
+    send ^c
+    ; Deselect
+    send {left}
 return 
+
+; Emulates cc
++C::send {c 2}
+c::
+    InputMotionAndSelect()
+    send ^x
+    gosub InsertMode
+return
 
 ; Cut to end of line
-+d::
++D::
 Send, {ShiftDown}{End}
-Send, ^x ; Cut instead of yank and delete
+Send, ^x
 Send, {ShiftUp}
 return
 
 ; Delete current line
+; dd handled specially, to delete newline.
 d::
-if IsLastKey("d")
-{
-    Send, {Home}{ShiftDown}{End}
-    Send, ^c ; Yank before delete, don't use cut so blank lines are deleted 
+    InputMotionAndSelect()
+    send ^x
+    if IsLastKey("d")
     Send, {Del}
-    Send, {Shift}
-}
+return
+
+s::
+    send +{right}
+    gosub, InsertMode
+    ; Wait for single key to be pressed, sends that key
+    input, inp, V E L1
+    send {left}
 return 
 
-+s::
-Send, {Home}{ShiftDown}{End}
-Send, ^x ; Cut instead of yank and delete
-Send, {ShiftUp}
-Gosub, InsertMode   
++S::
+    Send, {Home}{ShiftDown}{End}
+    Send, ^x ; Cut instead of yank and delete
+    Send, {ShiftUp}
+    Gosub, InsertMode   
 return 
 
-return 
 ; TODO handle regular paste , vs paste something picked up with yy
 ; current behavior assumes yanked with yy.
-p::
-Send, {End}{Enter}^v
+; Esc is sent to remove paste options bar.
+p::Send {End}{Enter}^v{esc}
+
+
+
+; Search actions
+/::
+    Send ^f
+    GoSub, InsertMode
+    ; V option means input is passed through. Unfortunately, this includes return.
+    ; E may or may not do anything. There for reliability.
+    input, inp, E V, {escape}{return}
+    ; Send shift return to move back one search
+    ; (the return key sent through to exit moves you forward once too many times. )
+    send +{return}
+    send {esc}
+    send {left}
+    gosub, NormalMode
 return
 
-; Search 
-/::
-Send, ^f
-Gosub InsertMode
-return
-; don't know if there is a reverse find
+; Simulate reverse find. Doesn't highlight the previous one,
+;  but does drop cursor there.
 ?::
-Send, ^f
-Gosub InsertMode
+    Send, ^f
+    GoSub, InsertMode
+    ; V option means input is passed through. Unfortunately, this includes return.
+    ; E may or may not do anything. There for reliability.
+    input, inp, E V, {escape}{return}
+    ; Send shift return to move back one search
+    ; (the return key sent through to exit moves you forward once too many times. )
+    send +{return}
+    send +{return}
+    send {esc}
+    send {left}
+    gosub, NormalMode
+return
+
+; Next/prev search repeat
+n::
+    send ^f
+    send {return}
+    send {esc}
+    send {left}
+return
++N::
+    Send, ^f
+    send +{return}
+    send {esc}
+    send {left}
+return
+
+; Numbers will be used to repeat motions.
+1::
+2::
+3::
+4::
+5::
+6::
+7::
+8::
+9::
+    InputMotionAndSelect(A_ThisHotkey, 1)
+    ;Deselect
+    send {right}{left}
 return
 
 ; C-P => Search all notebooks.
 ^p::
 Send, ^e
-; a bit weird - we're in insert mode after the search.
-GoSub InsertMode
+    ; a bit weird - we're in insert mode after the search.
+    GoSub InsertMode
 return 
 
 
-; swap case of current letter - doesn't work need to debug.
-~::
-    ; push clipboard to local variable
-    ClipSaved := ClipboardAll
+; swap case of current letter. Uses shift + ` (ie ~), but uses virtual code
+; because doesn't work otherwise. AHK uses ~ as special key, 
+; escaping doesn't seem to work.
++VKC0::
+    ; copy 1 charecter
+    Send, +{Right}
+    Copy()
 
-        ; copy 1 charector
-        Send, {ShiftDown}{Right}
-        Send, ^c
-        Send, {Shift}
+    ; invert char
+    if clipboard is upper
+        StringLower, Clipboard, Clipboard
+    else
+        StringUpper, Clipboard, Clipboard
 
-        ; invert char
-        char_to_invert:= Substr(Clipboard, 1, 1)
-        if char_to_invert is upper
-           inverted_char := Chr(Asc(char_to_invert) + 32)
-        else if char_to_invert is lower
-           inverted_char := Chr(Asc(char_to_invert) - 32)
-        else
-           inverted_char := char_to_invert
-
-        ;paste char.
-        ClipBoard := inverted_char
-        Send ^v{left}{right} 
-
-        ;restore original clipboard
-        Clipboard := ClipSaved
-        ClipWait
-    ClipSaved := ; free memory
-
+    Paste()
+    ; Return to original position
+    Send {left}
+    
 return
 
 ;; << Outdent
@@ -306,45 +542,37 @@ hotkey c, on
 
 if SingleKey = c
 {
-    SendInput, !+-
+     send !+-
 }
 else if SingleKey = o
 {
-    SendInput, !+{+}
+     send !+{+}
 }
 return
 
+; See https://autohotkey.com/docs/commands/Input.htm at the last example. 
+; Could be a way of implementing some commands at some point.
 ;--------------------------------------------------------------------------------
 ; Eat all other keys if in command mode.
 ;--------------------------------------------------------------------------------
-c::
-e::
 f::
 m::
-n::
-r::
-s::
 t::
-+C::
 +E::
 +H::
 +J::
 +K::
 +L::
 +M::
-+N::
 +P::
 +Q::
 +R::
-; +S::
 +T::
 +U::
 +V::
 +W::
-;+X::
 +Y::
 +Z::
 .::
 '::
-;::
-; return::
+`;::
