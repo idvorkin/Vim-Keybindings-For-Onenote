@@ -487,6 +487,30 @@ return
     send {left}
 return
 
+; Search for word under cursor. '#' command.
++3::
+    ; Ensure we have selected whole word, from anywhere within cursor.
+    send {right}^{left}+^{right}
+    copy()
+    send ^f
+    Paste()
+    send {return}
+    send {esc}
+    send {left}
+return
+; Opposite ('*'), find in reverse.
++8::
+    ; Ensure we have selected whole word, from anywhere within cursor.
+    send {right}^{left}+^{right}
+    copy()
+    send ^f
+    Paste()
+    send +{return}
+    send {esc}
+    send {left}
+return
+
+
 ; Numbers will be used to repeat motions.
 1::
 2::
