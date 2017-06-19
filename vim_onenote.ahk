@@ -69,15 +69,20 @@ return
 
 ; jj has to be implemented differently because of how insert mode works.
 ; This also fires the function for moving down.
-; Bugged. Currenly fires after only 1 j, but still sends that j. Grr.
+; '$' used to prevent recursive sending of this key.
 j::
     suspend, permit
     if InNormalMode
         j()
     else if IsLastKey("j")
+    {
+        ; Erase j previously typed
+        send {BackSpace}
         gosub NormalMode
+    }
     else
         send j
+return
 
 NormalMode:
     Suspend, Off
@@ -348,8 +353,11 @@ shiftG(){
 
 g(){
     if IsLastKey("g")
+    {
         ;gg - Go to start of document
+        msgbox gg
         Send, ^{Home}
+    }
 }
 g::g()
 
