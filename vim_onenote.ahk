@@ -151,55 +151,77 @@ ConvertMotionToFunctionName(letter){
 }
 
 ; Params are optional, with default values.
-InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0){
-    gosub, InsertMode
-    ; Get next typed character, then continue
-    Input, motion, L1
-    gosub, NormalMode
-    ;TODO: if motion = i, a g, or digit, need to wait. If digit, loop motion that many times. If i, g or w, wait for anotther motion.
-    ; if motion in "iag" Or motion is Integer
-    ; Cannot use OR with in/is.
-    if motion is Integer
-    {
-        ; If this is first number, reduce by one to prepare for addition.
-        if RepeatDigitDepth = 1
-            Repeat--
-        ; Update repeat with next digit.
-        Repeat :=(Repeat*10**RepeatDigitDepth + Motion)
-        ; The params account for if another number is entered
-        ; (I.e., more than 1 digit count)
-        InputMotionAndSelect(Repeat, ++RepeatDigitDepth)
-    }
-    else if motion in "iag"
-    {
-    ;     if motion = "i"
-    ;     {
-    ;         ; TODO inner()
-    ;         InputMotionAndSelect()
-    ;         ; Pass the motion in, have a default param in this function? Adds motions to list?
-    ;     }else if motion = "a"
-    ;     {
-    ;         ; TODO outer/a (word)
-    ;         InputMotionAndSelect()
-    ;     }else if motion = "g"
-    ;     {
-    ;         ; expect user is about to type another g (to go to start of doc)
-    ;     }
-    ; }
-    }
-    ; Handles cc, dd, etc.
-    ; dd has additional logic within own function, still relies on this though.
-    else if IsLastKey(motion){
-        send {end}
-        send +{home}
-        return
-    }else
-    loop %Repeat%{
-        MoveFunction := ConvertMotionToFunctionName(motion)
-        send {shift down}
-        ; Autohotkey allows dynamic functions (called by var name)
-        %MoveFunction%()
-        send {shift up}
+InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
+    ; If in visual mode, keep doing this.
+    ; Breaks after one round if not in visual mode.
+    loop{
+        gosub, InsertMode
+        ; Get next typed character, then continue
+        Input, motion, L1
+        gosub, NormalMode
+        ; User entered a number. Initiate a repeat.
+        if motion is Integer
+        {
+            ; If this is first number, reduce by one to prepare for addition.
+            if RepeatDigitDepth = 1
+                Repeat--
+            ; Update repeat with next digit.
+            Repeat :=(Repeat*10**RepeatDigitDepth + Motion)
+            ; The params account for if another number is entered
+            ; (I.e., more than 1 digit count)
+            InputMotionAndSelect(Repeat, ++RepeatDigitDepth)
+        }
+        else if motion in i,a,g,v
+        {
+            ; User has entered a second v. End visual mode.
+            if ( motion = "v" )
+            {
+                VisualMode = False
+                return
+            }else if motion = "g"
+            {
+                ; Will check if second g within this function. 
+                g()
+            }
+        }
+        ;     if motion = "i"
+        ;     {
+        ;         ; TODO inner()
+        ;         InputMotionAndSelect()
+        ;         ; Pass the motion in, have a default param in this function? Adds motions to list?
+        ;     }else if motion = "a"
+        ;     {
+        ;         ; TODO outer/a (word)
+        ;         InputMotionAndSelect()
+        ;     }else if motion = "g"
+        ;     {
+        ;         ; expect user is about to type another g (to go to start of doc)
+        ;     }
+        ; }
+
+        ; Handles cc, dd, etc.
+        ; dd has additional logic within own function, still relies on this though.
+        else if IsLastKey(motion){
+            send {end}
+            send +{home}
+            return
+        }else{
+            loop %Repeat%{
+            MoveFunction := ConvertMotionToFunctionName(motion)
+            send {shift down}
+            ; Autohotkey allows dynamic functions (called by var name)
+            %MoveFunction%()
+            send {shift up}
+            }
+
+            DoNotContinue := not VisualMode
+            if DoNotContinue
+            {
+                VisualMode := not VisualMode
+                msgbox, exiting visual...
+                break
+            }
+        }
     }
 }
 
@@ -356,10 +378,10 @@ ctrlF(){
     }
 ^F::ctrlF()
 
-shiftB(){
+ctrlB(){
     Send, {PgUp}
     }
-+B::shiftB()
+^B::ctrlB()
 
 
 
@@ -409,11 +431,14 @@ return
     Gosub, InsertMode   
 return 
 
-; TODO handle regular paste , vs paste something picked up with yy
-; current behavior assumes yanked with yy.
-; Esc is sent to remove paste options bar.
-p::Send {End}{Enter}^v{esc}
+; TODO handle regular paste , vs paste something picked up with yy.
+; That is, handle linewise vs in-place copy/paste. FLags maybe? ugh.
+; current behavior assumes in-place pasting/copying.
+p::Send {right}^v
++P::Send ^v
 
+; Visual mode parameter causes function to loop, selecting until v is pressed
+v::InputMotionAndSelect(,,True)
 
 
 ; Search actions
@@ -559,12 +584,12 @@ f::
 m::
 t::
 +E::
++B::
 +H::
 +J::
 +K::
 +L::
 +M::
-+P::
 +Q::
 +R::
 +T::
