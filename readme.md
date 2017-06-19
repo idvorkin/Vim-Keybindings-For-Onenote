@@ -59,6 +59,7 @@ Below are some of the key bindings implemented (if this table is stale, feel fre
 |n/N|Continue search forward/backward|
 |~|invert character|
 |<</>>|outdent/indent|
+|v|Enter visual (selection) mode|
 | zc/zo| Fold Close/Fold Open|
 
 Numbers can be used before a motion to repeat it.
