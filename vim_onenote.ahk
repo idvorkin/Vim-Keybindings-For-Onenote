@@ -409,10 +409,11 @@ return
     Gosub, InsertMode   
 return 
 
-; TODO handle regular paste , vs paste something picked up with yy
-; current behavior assumes yanked with yy.
-; Esc is sent to remove paste options bar.
-p::Send {End}{Enter}^v{esc}
+; TODO handle regular paste , vs paste something picked up with yy.
+; That is, handle linewise vs in-place copy/paste. FLags maybe? ugh.
+; current behavior assumes in-place pasting/copying.
+p::Send {right}^v
++P::Send ^v
 
 
 
