@@ -9,14 +9,12 @@ This project uses [AutoHotKey](http://www.autohotkey.com/). If you don't have au
 You can run the VIM keybinding via autohotkey, or by downloading and running the prebuilt executable.
 
 Run Vim keybindings via prebuilt executable
+Note that this may not be as up to date as the script.
 -----
 
 Download [vim\_onenote.exe](https://github.com/idvorkin/Vim-Keybindings-For-Onenote/raw/master/vim_onenote.exe)
 
-```
-REM Launch the checked in binary
-C:\users\Igor\Downloads>vim_onenote.exe
-```
+
 
 Run Vim keybindings via AutoHotKey script
 ----
@@ -34,7 +32,7 @@ Below are some of the key bindings implemented (if this table is stale, feel fre
 
 | Keys | Name|
 |:------|:----|
-|ESC | Enter normal mode (makes VIM key bindings active)|
+|ESC/jj/ctrl+[| Enter normal mode (makes VIM key bindings active)|
 | hjik | (Motion) left down up right|
 |C^F/C^B|Page Up/Page Down|
 |0/$|(Motion) Start Of Line/End Of Line|
@@ -53,10 +51,12 @@ Below are some of the key bindings implemented (if this table is stale, feel fre
 |y\<motion\>|Copy (yank) \<motion\>|
 |r|Replace|
 |s|Substitute|
-|p|Paste|
+|p/P|Paste after/before caret|
 |/|Search|
 |?|Reverse search|
 |n/N|Continue search forward/backward|
+|#/*|Go to next/previous word under caret|
+|<number>g|go to line|
 |~|invert character|
 |<</>>|outdent/indent|
 |v|Enter visual (selection) mode|
