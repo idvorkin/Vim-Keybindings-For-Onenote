@@ -106,7 +106,7 @@ SaveClipboard(){
 Copy(){
     SaveClipboard()
     send ^c
-    ClipWait, 0.5
+    ClipWait, 0.1
 }
 
 Paste(){
