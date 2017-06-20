@@ -168,7 +168,7 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
         if motion is Integer
         {
             ; If this is first number, reduce by one to prepare for addition.
-            if RepeatDigitDepth = 1
+            if RepeatDigitDepth = 0
                 Repeat--
             ; Update repeat with next digit.
             Repeat :=(Repeat*10**RepeatDigitDepth + Motion)
@@ -183,10 +183,17 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
             {
                 VisualMode = False
                 return
-            }else if motion = "g"
+            }else if (motion = "g")
             {
-                ; Will check if second g within this function. 
-                g()
+                if RepeatDigitDepth = 0
+                {
+                    ; Will check if second g within this function.
+                    g()
+                }else{
+                    ; pass the number entered as a line number
+                    g(repeat)
+                    return
+                }
             }
         }
         ;     if motion = "i"
@@ -223,7 +230,6 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
             if DoNotContinue
             {
                 VisualMode := not VisualMode
-                msgbox, exiting visual...
                 break
             }
         }
@@ -351,12 +357,21 @@ shiftG(){
     }
 +G::shiftG()
 
-g(){
+g(LineNumber := ""){
     if IsLastKey("g")
     {
         ;gg - Go to start of document
-        msgbox gg
         Send, ^{Home}
+    }
+    ; If linenumber is not blank, was a goto command.
+    else if LineNumber is Integer
+    {
+        send ^{home}
+        ; Will send one too many line-downs.
+        LineNumber--
+        loop, %LineNumber%{
+            send {end}{right}
+        }
     }
 }
 g::g()
