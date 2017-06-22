@@ -128,6 +128,7 @@ GetSelectedText(){
     return Output
 }
 
+
 GetCursorColumn(){
     BlockInput, on
     StartC := A_CaretX
@@ -294,16 +295,21 @@ b(){
 }
 b::b()
 e(){
-    ;send {right}^{left}^{right}
     ; First right is to move off space
-    send {right}^{right}{left}
-    ; Copy char to right, check if actually character
-    send +{right}
-    SelectedChar := GetSelectedText()
-    if SelectedChar is alpha
-        send {right}
-    else
-        send {left}
+    send {right}^{right}
+    ; Move left until no more whitespace/punctuation is encountered.
+    loop ; Break when you get to a letter rather than space/punctuation
+    {
+        send +{left}
+        CurrentChar := GetSelectedText()
+        if CurrentChar is alpha
+        {
+            send {right}
+            break
+        }
+        else
+            send {left}
+    }
 }
 e::e()
 
