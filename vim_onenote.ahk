@@ -166,7 +166,10 @@ ConvertMotionToFunctionName(letter){
 InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
     ; If in visual mode, keep doing this.
     ; Breaks after one round if not in visual mode.
+    ; Blockinput doesn't work without running as admin.
+    msgbox, start method
     loop{
+        msgbox, start loop
         gosub, InsertMode
         BlockInput, Off
         ; Get next typed character, then continue
@@ -176,6 +179,7 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
         ; User entered a number. Initiate a repeat.
         if motion is Integer
         {
+            msgbox, integer %motion%
             ; If this is first number, reduce by one to prepare for addition.
             if RepeatDigitDepth = 0
                 Repeat--
@@ -184,6 +188,8 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
             ; The params account for if another number is entered
             ; (I.e., more than 1 digit count)
             InputMotionAndSelect(Repeat, ++RepeatDigitDepth)
+            BlockInput, off
+            return
         }
         else if motion in i,a,g,v
         {
@@ -229,6 +235,7 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
             send +{home}
             return
         }else{
+            msgbox, final else
             MoveFunction := ConvertMotionToFunctionName(motion)
             loop %Repeat%{
             send {shift down}
@@ -295,6 +302,7 @@ b(){
 }
 b::b()
 e(){
+    send {e up}
     ; First right is to move off space
     send {right}^{right}
     ; Move left until no more whitespace/punctuation is encountered.
@@ -345,6 +353,7 @@ l::l()
 ; slow on slow computers.
 ; TODO: Fix column selection to check if at start of line. 
 j(){
+    send {j up}
     BlockInput on
     column := GetCursorColumn()
     send {end}{right}{end}
@@ -357,6 +366,7 @@ j(){
 }
 
 k(){
+    send {k up}
     BlockInput on
     column := GetCursorColumn()
     send {home}{Left}    
