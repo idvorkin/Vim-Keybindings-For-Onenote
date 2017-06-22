@@ -69,7 +69,6 @@ return
 
 ; jj has to be implemented differently because of how insert mode works.
 ; This also fires the function for moving down.
-; '$' used to prevent recursive sending of this key.
 j::
     suspend, permit
     if InNormalMode
@@ -123,6 +122,7 @@ RestoreClipboard(){
 }
 
 GetCursorColumn(){
+    BlockInput, on
     StartC := A_CaretX
     send +{home}
     ; Saves clipwait having to time out on empty selection if start of line.
@@ -138,6 +138,7 @@ GetCursorColumn(){
         ; Deselect selection
         send {right}{left}
     }
+    BlockInput, off
     return position
 }
 
@@ -161,8 +162,10 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
     ; Breaks after one round if not in visual mode.
     loop{
         gosub, InsertMode
+        BlockInput, Off
         ; Get next typed character, then continue
         Input, motion, L1
+        BlockInput, On
         gosub, NormalMode
         ; User entered a number. Initiate a repeat.
         if motion is Integer
@@ -182,6 +185,7 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
             if ( motion = "v" )
             {
                 VisualMode = False
+                BlockInput, Off
                 return
             }else if (motion = "g")
             {
@@ -192,6 +196,7 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
                 }else{
                     ; pass the number entered as a line number
                     g(repeat)
+                    BlockInput, Off
                     return
                 }
             }
@@ -218,8 +223,8 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
             send +{home}
             return
         }else{
-            loop %Repeat%{
             MoveFunction := ConvertMotionToFunctionName(motion)
+            loop %Repeat%{
             send {shift down}
             ; Autohotkey allows dynamic functions (called by var name)
             %MoveFunction%()
@@ -229,11 +234,12 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
             DoNotContinue := not VisualMode
             if DoNotContinue
             {
-                VisualMode := not VisualMode
+                ;VisualMode := not VisualMode
                 break
             }
         }
     }
+    BlockInput, Off
 }
 
 ;--------------------------------------------------------------------------------
@@ -319,6 +325,7 @@ l::l()
 ; slow on slow computers.
 ; TODO: Fix column selection to check if at start of line. 
 j(){
+    BlockInput on
     column := GetCursorColumn()
     send {end}{right}{end}
     if GetCursorColumn() > column{
@@ -326,16 +333,19 @@ j(){
         ; Send right %column% times.
         send {right %column%}
     }
+    BlockInput off
 }
 
 k(){
+    BlockInput on
     column := GetCursorColumn()
     send {home}{Left}    
     if GetCursorColumn() > column{
         send {home}
         ; Send right %column% times.
         send {right %column%}
-    }
+    } 
+    BlockInput off
 }
 k::k()
 
@@ -425,9 +435,8 @@ return
 
 ; Cut to end of line
 +D::
-Send, {ShiftDown}{End}
+Send, +{End}
 Send, ^x
-Send, {ShiftUp}
 return
 
 ; Delete current line
