@@ -45,6 +45,11 @@ SetTitleMatchMode 2 ;- Mode 2 is window title substring.
 ; return to insert mode, end by calling InsertMode. On script startup, InsertMode is entered.
 
 ;--------------------------------------------------------------------------------
+; These variables are global, because several methods rely on the last key,
+; which may have been sucked up as a motion.
+global PreviousMotion := ""
+global Motion := ""
+
 Gosub InsertMode ; goto InsertMode mode on script startup
 
 
@@ -75,7 +80,7 @@ j::
     suspend, permit
     if InNormalMode
         j()
-    else if IsLastKey("j")
+    else if IsLastHotkey("j")
     {
         ; Erase j previously typed
         send {BackSpace}
@@ -92,9 +97,9 @@ NormalMode:
 return
 
 ;--------------------------------------------------------------------------------
-IsLastKey(key)
+IsLastHotkey(key)
 {
-    return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 400)
+    return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 800)
 }
 
 SaveClipboard(){
@@ -164,11 +169,9 @@ ConvertMotionToFunctionName(letter){
         return letter
 }
 
-global Motion := "" 
 ; Params are optional, with default values.
 InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
     global PreviousMotion
-    global Motion = ""
     if (Motion == ""){
         Motion = %A_ThisHotkey%
     }
@@ -176,7 +179,7 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
     ; Breaks after one round if not in visual mode.
     ; Blockinput doesn't work without running as admin.
     loop{
-        PreviousMotion := Motion
+    PreviousMotion := Motion
         gosub, InsertMode
         BlockInput, Off
         ; Get next typed character, then continue
@@ -199,7 +202,6 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
         }
         else if motion in i,a,g,v
         {
-            msgbox sucked up iagv
             ; User has entered a second v. End visual mode.
             if ( motion = "v" )
             {
@@ -208,16 +210,26 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
                 return
             }else if (motion = "g")
             {
-                if RepeatDigitDepth = 0
+                if RepeatDigitDepth > 0
                 {
-                    ; Will check if second g within this function.
-                    g()
-                }else{
                     ; pass the number entered as a line number
+                    send {shift down}
                     g(repeat)
+                    send {shift up}
                     BlockInput, Off
                     return
+                }else{
+                    if (PreviousMotion == "g" or IsLastHotkey("g")){
+                        send ^+{Home}
+                        ; Reset previous motion
+                        PreviousMotion = ""
+                        Motion = ""
+                        BlockInput, off
+                        send {shift up}
+                        return
+                    }
                 }
+
             }
         }
         ;     if motion = "i"
@@ -237,26 +249,38 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
 
         ; Handles cc, dd, etc.
         ; dd has additional logic within own function, still relies on this though.
-        else if (motion == PreviousMotion){
-            send {end}
-            send +{home}
-            return
-        }else{
-            MoveFunction := ConvertMotionToFunctionName(motion)
-            msgbox, %MoveFunction%
-            loop %Repeat%{
+        else if (motion == PreviousMotion or IsLastHotkey(motion)){
+            if motion in y,d,c
+            {
+                send {home}
+                loop %repeat%
+                {
+                    ; Simulate down, to pick up multiple lines
+                    send +{end}+{right 2}+{shift up}
+                }
+                send +{left 2}
+                if (motion == "d")
+                {
+                    send ^x
+                    send {del}
+                }
+                PreviousMotion := ""
+                return
+            }
+        }
+        MoveFunction := ConvertMotionToFunctionName(motion)
+        loop %Repeat%{
             send {shift down}
             ; Autohotkey allows dynamic functions (called by var name)
             %MoveFunction%()
             send {shift up}
-            }
+        }
 
-            DoNotContinue := not VisualMode
-            if DoNotContinue
-            {
-                ;VisualMode := not VisualMode
-                break
-            }
+        DoNotContinue := not VisualMode
+        if DoNotContinue
+        {
+            ;VisualMode := not VisualMode
+            break
         }
     }
     BlockInput, Off
@@ -405,7 +429,7 @@ shiftG(){
 +G::shiftG()
 
 g(LineNumber := ""){
-    if IsLastKey("g")
+    if IsLastHotkey("g")
     {
         ;gg - Go to start of document
         Send, ^{Home}
@@ -478,13 +502,12 @@ return
 
 ; Delete current line
 ; dd handled specially, to delete newline.
-d::d()
-d(){
+d::
     InputMotionAndSelect()
     send ^x
-    if IsLastKey("d")
+    if IsLastHotkey("d")
         Send, {Del}
-}
+return
 
 s::
     send +{right}
@@ -627,7 +650,7 @@ return
 ;; << Outdent
 
 <::
-if IsLastKey("<")
+if IsLastHotkey("<")
 {
     Send, {Home}
     Send, +{Tab}
@@ -637,7 +660,7 @@ return
 ;; << Outdent
 
 >::
-if IsLastKey(">")
+if IsLastHotkey(">")
 {
     Send, {Home}
     Send, {Tab}
