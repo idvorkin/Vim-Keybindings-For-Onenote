@@ -121,6 +121,13 @@ RestoreClipboard(){
     ClipSaved := ; free memory
 }
 
+GetSelectedText(){
+    Copy()
+    Output := Clipboard
+    RestoreClipboard()
+    return Output
+}
+
 GetCursorColumn(){
     BlockInput, on
     StartC := A_CaretX
@@ -130,9 +137,7 @@ GetCursorColumn(){
     ;if (StartC = %A_CaretX%){
         ;return 0
     ;}
-    Copy()
-    position := strLen(Clipboard)
-    RestoreClipboard()
+    position := strLen(GetSelectedText())
     if position != 0
     {
         ; Deselect selection
@@ -289,7 +294,16 @@ b(){
 }
 b::b()
 e(){
-    send ^{right}{left}
+    ;send {right}^{left}^{right}
+    ; First right is to move off space
+    send {right}^{right}{left}
+    ; Copy char to right, check if actually character
+    send +{right}
+    SelectedChar := GetSelectedText()
+    if SelectedChar is alpha
+        send {right}
+    else
+        send {left}
 }
 e::e()
 
