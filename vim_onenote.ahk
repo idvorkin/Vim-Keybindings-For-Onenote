@@ -167,9 +167,7 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
     ; If in visual mode, keep doing this.
     ; Breaks after one round if not in visual mode.
     ; Blockinput doesn't work without running as admin.
-    msgbox, start method
     loop{
-        msgbox, start loop
         gosub, InsertMode
         BlockInput, Off
         ; Get next typed character, then continue
@@ -179,7 +177,6 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
         ; User entered a number. Initiate a repeat.
         if motion is Integer
         {
-            msgbox, integer %motion%
             ; If this is first number, reduce by one to prepare for addition.
             if RepeatDigitDepth = 0
                 Repeat--
@@ -235,7 +232,6 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
             send +{home}
             return
         }else{
-            msgbox, final else
             MoveFunction := ConvertMotionToFunctionName(motion)
             loop %Repeat%{
             send {shift down}
