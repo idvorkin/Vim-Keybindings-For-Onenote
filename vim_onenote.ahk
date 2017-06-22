@@ -25,6 +25,8 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 #KeyHistory 0 ; Disables logging of keystrokes in key history
 #Warn ; Provides code warnings when running
 
+StringCaseSense, On
+
 SetTitleMatchMode 2 ;- Mode 2 is window title substring.
 ;#IfWinActive, OneNote ; Only apply this script to onenote. Doesn't seem to work
 ; Only works in (seemingly) the Onenote text interface. WORKS
@@ -197,6 +199,7 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
         }
         else if motion in i,a,g,v
         {
+            msgbox sucked up iagv
             ; User has entered a second v. End visual mode.
             if ( motion = "v" )
             {
