@@ -162,12 +162,19 @@ ConvertMotionToFunctionName(letter){
         return letter
 }
 
+global Motion := "" 
 ; Params are optional, with default values.
 InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
+    global PreviousMotion
+    global Motion = ""
+    if (Motion == ""){
+        Motion = %A_ThisHotkey%
+    }
     ; If in visual mode, keep doing this.
     ; Breaks after one round if not in visual mode.
     ; Blockinput doesn't work without running as admin.
     loop{
+        PreviousMotion := Motion
         gosub, InsertMode
         BlockInput, Off
         ; Get next typed character, then continue
@@ -227,12 +234,13 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
 
         ; Handles cc, dd, etc.
         ; dd has additional logic within own function, still relies on this though.
-        else if IsLastKey(motion){
+        else if (motion == PreviousMotion){
             send {end}
             send +{home}
             return
         }else{
             MoveFunction := ConvertMotionToFunctionName(motion)
+            msgbox, %MoveFunction%
             loop %Repeat%{
             send {shift down}
             ; Autohotkey allows dynamic functions (called by var name)
@@ -452,7 +460,7 @@ y::
 return 
 
 ; Emulates cc
-+C::send {c 2}
++C::sendEvent {c 2}
 c::
     InputMotionAndSelect()
     send ^x
@@ -467,12 +475,13 @@ return
 
 ; Delete current line
 ; dd handled specially, to delete newline.
-d::
+d::d()
+d(){
     InputMotionAndSelect()
     send ^x
     if IsLastKey("d")
-    Send, {Del}
-return
+        Send, {Del}
+}
 
 s::
     send +{right}
