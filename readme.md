@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/idvorkin/Vim-Keybindings-For-Onenote.png?label=ready&title=Ready)](https://waffle.io/idvorkin/Vim-Keybindings-For-Onenote?utm_source=badge)
 VIM keybindings for OneNote
 ====
 
