@@ -94,7 +94,22 @@ TestAndCompareOutput(test){
     global Log
     OnenoteOutput := SendTestToOnenoteAndReturnResult(test)
     VimOutput := SendTestToVimAndReturnResult(test)
-    LoggedResults += "" ; CompareString(OnenoteOutput, VimOutput)
+    LoggedResults += "" CompareStrings(OnenoteOutput, VimOutput)
+}
+
+CompareStrings(string1, string2){
+    file1 := FileOpen("string1", w)
+    file2 := FileOpen("string2", w)
+    file1.write(string1)
+    file2.write(string2)
+    file1.close()
+    file2.close()
+
+    ; This line runs the DOS fc (file compare) program and returns the stdout output.
+    MsgBox % ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c fc.exe string1 string2").StdOut.ReadAll()
+
+   FileDelete, string1
+   FileDelete, string2
 }
 
 ; Tidy up, close programs, write log to file.
