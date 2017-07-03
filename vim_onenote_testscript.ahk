@@ -29,16 +29,13 @@ run, onenote
 winwait, - Microsoft OneNote ; Wait for onenote to start
 WinActivate, - Microsoft OneNote
 WinWaitActive, - Microsoft OneNote
-send ^nVim Onenote Test ; Create a new page in onenote, name it, move to text section
+send ^nVim Onenote Test{return} ; Create a new page in onenote, name it, move to text section
 
 run, %A_ScriptDir%/vim_onenote.ahk
 
-
-
 ; This is the text that all of the tests are run on, fresh.
 SampleText =
-(
-{down 2}
+({return}
 This is the first line of the test, and contains a comma and a period.
 Second line here
 3rd line. The second line is shorter than both 1st and 3rd line.
@@ -87,7 +84,7 @@ SendTestToOnenoteAndReturnResult(test){
     ; Make sure we are in normal mode to start with, at start of text.
     send {esc}^{home} 
     msgbox %test%
-    controlsend,, %test%,A
+    send %test%
     sleep, 1000
     msgbox, justested
     send ^a^a^a ; Ensure we select all of the inserted text.
@@ -111,7 +108,7 @@ SendTestToVimAndReturnResult(test){
     sleep, 1000
     msgbox, justested
     SaveClipboard()
-    send :`%d+ ; select all text, cut to system clipboard
+    send {esc}:`%d`+ ; select all text, cut to system clipboard
     output := Clipboard
     RestoreClipboard()
     return output
@@ -164,8 +161,8 @@ EndTesting(){
     send {delete}
     SwitchToVim()
     send :q!{return} ; Exit vim.
-    LogFileName = %A_Scriptdir%\testlogs\%A_Now%
-    LogFile := FileOpen(LogFileName, w)
+    LogFileName = %A_Scriptdir%\testlogs\%A_Now%.txt
+    LogFile := FileOpen(LogFileName, "w")
     LogFile.Write(LoggedResults) 
     LogFile.Close()
     if (TestsFailed == True)
@@ -174,10 +171,10 @@ EndTesting(){
     }else{
         msgbox, All tests pass!
     }
+    ExitApp
 }
 
 RunTests()
 
-ExitApp
 ; All 4 modifier keys + b initiates test.
 ;^!+#b::SendTestCommands()
