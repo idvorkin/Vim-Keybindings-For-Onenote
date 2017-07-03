@@ -95,9 +95,12 @@ return
 
 NormalMode:
     Suspend, Off
+    if (InNormalMode == False)
+    {
+        ; Send left to drop you "on" the letter you were in front of.
+        send {left}
+    }
     global InNormalMode := True
-    ; Send left to drop you "on" the letter you were in front of.
-    send {left}
     ToolTip, OneNote Vim Command Mode Active, 0, 0
 return
 
