@@ -24,6 +24,9 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 ;SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #KeyHistory 0 ; Disables logging of keystrokes in key history
 #Warn ; Provides code warnings when running
+; Compilation directives to include the up and down exes.
+FileInstall, sendDown.exe, sendDown.exe
+FileInstall, sendUp.exe, sendUp.exe
 
 StringCaseSense, On
 
