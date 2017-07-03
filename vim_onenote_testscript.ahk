@@ -31,6 +31,24 @@ SwitchToVim(){
     WinWaitActive,  - VIM
 }
 
+SampleText =
+(
+   This is the first line of the test, and contains a comma and a period.
+   Second line here
+   3rd line. The second line is shorter than both 1st and 3rd line.
+   The fourth line contains     some additional whitespace.	< a tab too!
+   What should I put on the 5th line?A missing space, perhaps
+   This line 6 should be longer than the line before it and after it to test kj
+   No line, including 7, can be longer than 80 characters.
+   This is because onenote wraps automatically, (line 8)
+   and treats a wrapped line as separate lines (line 9)
+)
+
+; Put a comma before each test string to add it to the previous line.
+; The test will be send from normal mode, with the cursor at the start of the sample text.
+ArrayOfTests := [
+    ,
+]
 
 SwitchToOnenote(){
     WinActivate, VIM Onenote Test - Microsoft Onenote
@@ -39,7 +57,11 @@ SwitchToOnenote(){
 
 SendTestToOnenoteAndReturnResult(test){
     SwitchToOnenote()
-    send {esc} ; Make sure we are in normal mode to start with
+    ; Ensure insert mode for the sample text.
+    send i{backspace}
+    send %SampleText%
+    ; Make sure we are in normal mode to start with, at start of text.
+    send {esc}^{home} 
     send %test%
     send ^a^a^a ; Ensure we select all of the inserted text.
     output := GetSelectedText()
@@ -49,10 +71,14 @@ SendTestToOnenoteAndReturnResult(test){
 
 SendTestToVimAndReturnResult(test){
     SwitchToVim()
-    send {esc} ; Make sure we are in normal mode to start with
+    ; Ensure insert mode for the sample text.
+    send i{backspace}
+    send %SampleText%
+    ; Make sure we are in normal mode to start with, at start of text.
+    send {esc}^{home} 
     send %test%
     SaveClipboard()
-    send :`%Y+ ; select all text, copy to system clipboard
+    send :`%d+ ; select all text, cut to system clipboard
     output := Clipboard
     RestoreClipboard()
     return output
