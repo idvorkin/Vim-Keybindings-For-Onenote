@@ -1,7 +1,8 @@
-﻿; This script requires gvim installed on the computer. It effectively diffs the results of sending the keys below to a new onenote page vs to a new gvim document.
+﻿; This script requires vim installed on the computer. It effectively diffs the results of sending the keys below to a new onenote page vs to a new vim document.
 ; Up and down are specifically lightly tested, as they will definitely do different things under vim.
 ; This may also be true of e, w and b, due to the way onenote handles words (treating punctuation as a word)
 
+; Results are outputed as the current time and date in %A_ScriptDir%\testlogs
 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
@@ -9,13 +10,107 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 sendlevel, 1 ; So these commands get triggered by autohotkey.
-; Ignore these first lines, it is just to set up vim correctly.
-send :imap jj <esc>
-SendTestCommands(){
-        send iThis is the first line of the test script.{return}New line one above this one. In onenote, newlines may be handled strangely. We will just have to ignore that and keep all lines within the wrap.{esc}{b 14}i{return}{esc}A{return}We have now tested i, A, b. We will now test dd, o.{return}This line should not be here if dd works.{esc}ddoNow testing I, 0, d3w (see line 9 for results):{return}two three{esc}Ione {esc}0d3wiNow we will test positioning for i and a, {return}entering normal with double js.jj{left}i(This should be between the j and s)jjla. {return}The js test line should have a period at the endjjOIf this line is before the d3w test, O has worked.{return}{esc}pa. Paste works with d3w, I and 0 work if BOL=words "123".{Return}Now test j{esc}ji(te-j works-st){esc}2wdbjjjoJust tested 2wdb. Should have only one "st" on{return}the previous test, two "te"s. This is the 13th line.{return}{esc}0eeea[b-e works with normal words-.]{esc}$a EOL ($) is good.{return}Now for some crap{esc}cccc replaces whole lines, and (redacted) functions as expected.{return} y4b{esc}y5b5wa {esc}pbbb*wi, as does *{esc}o
+SetTitleMatchMode 2 ; window title functions will match by containing the match text. 
 
+SaveClipboard(){
+    ; push clipboard to variable
+    global ClipSaved := ClipboardAll
+    ; Clear clipboard to avoid errors
+    Clipboard :=
+}
+
+Copy(){
+    SaveClipboard()
+    send ^c
+    ClipWait, 0.1
+}
+
+Paste(){
+    Send %Clipboard%
+    RestoreClipboard()
+}
+
+RestoreClipboard(){
+    ;restore original clipboard
+    global ClipSaved
+    Clipboard := ClipSaved
+    ;ClipWait
+    ClipSaved := ; free memory
+}
+
+GetSelectedText(){
+    Copy()
+    Output := Clipboard
+    RestoreClipboard()
+    return Output
+}
+
+; Initialise the programs
+run, cmd.exe /r vim
+winwait,  - VIM ; Wait for vim to start
+send :imap jj <esc> ; Prepare vim    
+;TODO: Check if onenote already open. Or just ignore? multiple windows may cause problems.
+;       May be fixed by making the switch specific to the test page.
+run, onenote
+winwait, - Microsoft OneNote ; Wait for onenote to start
+send ^nVim Onenote Test{down} ; Create a new page in onenote, name it, move to text section
+
+run, %A_ScriptDir%/vim_onenote.ahk
+
+SwitchToVim(){
+    WinActivate,  - VIM
+    WinWaitActive,  - VIM
+}
+
+
+SwitchToOnenote(){
+    WinActivate, VIM Onenote Test - Microsoft Onenote
+    WinWaitActive, VIM Onenote Test - Microsoft Onenote
+}
+
+SendTestToOnenoteAndReturnResult(test){
+    SwitchToOnenote()
+    send {esc} ; Make sure we are in normal mode to start with
+    send %test%
+    send ^a^a^a ; Ensure we select all of the inserted text.
+    output := GetSelectedText()
+    ; Delete text ready for next test
+    send {backspace}
+}
+
+SendTestToVimAndReturnResult(test){
+    SwitchToVim()
+    send {esc} ; Make sure we are in normal mode to start with
+    send %test%
+    SaveClipboard()
+    send :`%Y+ ; select all text, copy to system clipboard
+    output := Clipboard
+    RestoreClipboard()
+    return output
+}
+
+LoggedResults := ""
+TestAndCompareOutput(test){
+    global Log
+    OnenoteOutput := SendTestToOnenoteAndReturnResult(test)
+    VimOutput := SendTestToVimAndReturnResult(test)
+    LoggedResults += "" ; CompareString(OnenoteOutput, VimOutput)
+}
+
+; Tidy up, close programs, write log to file.
+EndTesting(){
+    Global LoggedResults
+    ; Delete the new page in onenote
+    SwitchToOnenote()
+    send ^+A
+    send {delete}
+    SwitchToVim()
+    send :q!{return} ; Exit vim.
+    LogFile := FileOpen("%A_Scriptdir%\testlogs\A_Now", w)
+    LogFile.Write(LoggedResults) 
+    LogFile.Close()
 }
 
 
 ; All 4 modifier keys + b initiates test.
-^!+#b::SendTestCommands()
+;^!+#b::SendTestCommands()
