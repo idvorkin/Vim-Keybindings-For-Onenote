@@ -12,38 +12,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 sendlevel, 1 ; So these commands get triggered by autohotkey.
 SetTitleMatchMode 2 ; window title functions will match by containing the match text. 
 
-SaveClipboard(){
-    ; push clipboard to variable
-    global ClipSaved := ClipboardAll
-    ; Clear clipboard to avoid errors
-    Clipboard :=
-}
-
-Copy(){
-    SaveClipboard()
-    send ^c
-    ClipWait, 0.1
-}
-
-Paste(){
-    Send %Clipboard%
-    RestoreClipboard()
-}
-
-RestoreClipboard(){
-    ;restore original clipboard
-    global ClipSaved
-    Clipboard := ClipSaved
-    ;ClipWait
-    ClipSaved := ; free memory
-}
-
-GetSelectedText(){
-    Copy()
-    Output := Clipboard
-    RestoreClipboard()
-    return Output
-}
+#include vim_onenote_library.ahk
 
 ; Initialise the programs
 run, cmd.exe /r vim
