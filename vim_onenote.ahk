@@ -330,49 +330,20 @@ l(){
 l::l()
 
 ; vi up and down.
-;  Onenote does some magic that blocks up/down processing. See more @ 
+;  Onenote does some magic that blocks autohotkey up/down processing. See more @ 
 ; (Onenote 2013) http://www.autohotkey.com/board/topic/74113-down-in-onenote/
 ; (Onenote 2007) http://www.autohotkey.com/board/topic/15307-up-and-down-hotkeys-not-working-for-onenote-2007/
-;j(){
-;    send {end}
-;    send {right}
-;    send {end}
-;    }
-;j::j()
-
-;k(){
-    ;send {home}
-    ;send {left}
-    ;}
-;k::k()
-
-; Alternate, more accurate up and down. Much more complicated though, may be
-; slow on slow computers.
-; TODO: Fix column selection to check if at start of line. 
+; HOWEVER AutoIT's send commands still work with OneNote. Therefore this project uses compiled .au3 scripts.
+; The compiled scripts are one line each:
+; Send("{UP}")
+; Send("{DOWN}")
 j(){
-    send {j up}
-    BlockInput on
-    column := GetCursorColumn()
-    send {end}{right}{end}
-    if GetCursorColumn() > column{
-        send {home}
-        ; Send right %column% times.
-        send {right %column%}
-    }
-    BlockInput off
-}
+    run %A_ScriptDir%\sendDown.exe
+} 
+; J's hotkey is handled at the start of the script, to allow jj as a normal mode exit.
 
 k(){
-    send {k up}
-    BlockInput on
-    column := GetCursorColumn()
-    send {home}{Left}    
-    if GetCursorColumn() > column{
-        send {home}
-        ; Send right %column% times.
-        send {right %column%}
-    } 
-    BlockInput off
+    run %A_ScriptDir%\sendUp.exe
 }
 k::k()
 
