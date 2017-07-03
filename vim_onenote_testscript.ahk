@@ -106,10 +106,12 @@ CompareStrings(string1, string2){
     file2.close()
 
     ; This line runs the DOS fc (file compare) program and returns the stdout output.
-    MsgBox % ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c fc.exe string1 string2").StdOut.ReadAll()
-
+    ; Could also consider using comp.exe /AL instead, to compare individual characters. Possibly more useful.
+    DiffResult := ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c fc.exe /LN string1 string2").StdOut.ReadAll()
+    msgbox %DiffResult%
    FileDelete, string1
    FileDelete, string2
+   return DiffResult
 }
 
 ; Tidy up, close programs, write log to file.
