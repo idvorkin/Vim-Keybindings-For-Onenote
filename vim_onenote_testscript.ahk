@@ -47,7 +47,8 @@ SampleText =
 ; Put a comma before each test string to add it to the previous line.
 ; The test will be send from normal mode, with the cursor at the start of the sample text.
 ArrayOfTests := [
-    ,
+    ,"i at start of first lin.{esc}ie{esc}IWord" ; Tests i,I
+    ,"ahe {esc}A Also this." ; a, A
 ]
 
 SwitchToOnenote(){
