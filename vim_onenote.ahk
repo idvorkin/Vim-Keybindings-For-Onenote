@@ -93,6 +93,8 @@ return
 NormalMode:
     Suspend, Off
     global InNormalMode := True
+    ; Send left to drop you "on" the letter you were in front of.
+    send {left}
     ToolTip, OneNote Vim Command Mode Active, 0, 0
 return
 
@@ -411,9 +413,15 @@ k(){
 k::k()
 
 
-+x::send {BackSpace}
++X::shiftX()
+shiftX(){
+    send {BackSpace}
+}
 
-x::send {Delete}
+x::x()
+x(){
+    send {Delete}
+}
 
 
 
