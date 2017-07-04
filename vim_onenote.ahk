@@ -106,7 +106,7 @@ return
 
 ;--------------------------------------------------------------------------------
 
-#include vim_onenote_library.ahk
+#include %A_ScriptDir%\vim_onenote_library.ahk
 
 GetCursorColumn(){
     BlockInput, on

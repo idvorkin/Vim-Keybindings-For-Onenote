@@ -10,32 +10,32 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 #warn
-;sendlevel, 1 ; So these commands get triggered by autohotkey.
+sendlevel, 1 ; So these commands get triggered by autohotkey.
 SetTitleMatchMode 2 ; window title functions will match by containing the match text. 
 SetKeyDelay, 50 ; Only affects sendevent, used for sending the test
-; (gives vim scrpit time to react).
+; (gives vim script time to react).
 
 ; Contains clipboard related functions, among others.
-#include vim_onenote_library.ahk
+#include %A_ScriptDir%\vim_onenote_library.ahk
+
 
 TestsFailed := False
 LogFileName = %A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 
 ; Initialise the programs
-run, cmd.exe /r vim
+run, cmd.exe /r vim,,,VimPID
 winwait,  - VIM ; Wait for vim to start
 send :imap jj <esc>{return} ; Prepare vim    
 ;TODO: Check if onenote already open. Or just ignore? multiple windows may cause problems.
 ;       May be fixed by making the switch specific to the test page.
-run, onenote
+Run, OneNote,,,OneNotePID
 winwait, - Microsoft OneNote ; Wait for onenote to start
 WinActivate, - Microsoft OneNote
 WinWaitActive, - Microsoft OneNote
 send ^nVim Onenote Test{return} ; Create a new page in onenote, name it, move to text section
 WinMaximize,Vim Onenote Test - Microsoft OneNote
 
-run, %A_ScriptDir%/vim_onenote.ahk
-
+run, %A_ScriptDir%/vim_onenote.ahk,,, AHKVimPID
 ; This is the text that all of the tests are run on, fresh.
 SampleText =
 ({return}
@@ -54,7 +54,11 @@ And treats a wrapped line as separate lines (line 9)
 ; The test will be send from normal mode, with the cursor at the start of the sample text.
 ArrayOfTests := ["" ; Base case, ensures the sample is entered the same between the two.
     ,"iAt start of first lin.{esc}ie{esc}IWord " ; Tests i,I
-    ,"ahe {esc}A Also this." ] ; a, A]
+    ,"ahe {esc}A Also this." ; a, A]
+    ,":{return}"] ; Garuanteed failure
+
+RunTests() ; Lets get this show on the road
+
 
 RunTests(){
     Global ArrayOfTests
@@ -85,11 +89,9 @@ SendTestToOnenoteAndReturnResult(test){
     Clipboard :=""
     Clipboard := SampleText
     Clipwait
-    msgbox, %clipboard%
-    send ^v ; Paste
+    sendevent ^v ; Paste, for some reason normal send won't work.
     RestoreClipboard()
-    msgbox you violated the law
-    sleep, 1000
+    sleep, 100
     ; Make sure we are in normal mode to start with, at start of text.
     send {esc}
     sleep, 20
@@ -134,7 +136,8 @@ TestAndCompareOutput(test){
 CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
     Global LogFileName
     Global TestsFailed
-    msgbox Strings:`n%OnenoteOutput%`n%VIMOutput%
+    ; Store files in separate dir.
+    SetWorkingDir %A_ScriptDir%\TestingLogs  
     file1 := FileOpen("OnenoteOutput", "w")
     file2 := FileOpen("VIMOutput", "w")
     file1.write(OnenoteOutput)
@@ -146,22 +149,26 @@ CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
     ; Could also consider using comp.exe /AL instead, to compare individual characters. Possibly more useful.
     ; Comp sucks. Wow. Using fc, but only shows two lines: the different one and the one after. Hard to see, but it'll do for now.
     DiffResult := ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c fc.exe /LB2 /N OnenoteOutput VIMOutput").StdOut.ReadAll() 
-    msgbox %DiffResult%
-    IfNotInString, DiffResult, FC: no differences encountered
+    msgbox, %DiffResult%
+    IfNotInString,DiffResult, FC: no differences encountered
     {
-        msgbox, differences found.
         TestsFailed := True
         LogFile := FileOpen(LogFileName, "w")
-        LogFile.Write("Test = `"%CurrentTest%`"`n%DiffResult%`n`n")
-        msgbox is the file there? %LogFileName%
+        LogEntry := "Test = """
+        msgbox, %CurrentTest%
+        LogEntry += %CurrentTest%
+        LogFile.Write(LogEntry) ; "Test = ""%CurrentTest%""`n%DiffResult%`n`n")
+        msgbox Logentry %LogEntry%
         LogFile.Close()
     }
     FileDelete, OnenoteOutput
     FileDelete, VIMOutput
+    FileDelete, _.sw*
 }
 
 ; Tidy up, close programs.
 EndTesting(){
+    msgbox, endtesting
     Global TestsFailed
     Global LogFileName
     ; Delete the new page in onenote
@@ -172,7 +179,6 @@ EndTesting(){
     send :q{!}
     send {return} ; Exit vim.
    
-    msgbox testsfailed: %testsfailed%
     if (TestsFailed == True)
     {
         msgbox,4,,At least one test has failed!`nResults are in %LogFileName%`nOpen log? 
@@ -180,13 +186,27 @@ EndTesting(){
         {
             run %LogFileName%
         }
+    ExitApp, 1 ; Failed exit
     }else{
         msgbox, All tests pass!
+    ExitApp, 0 ; Success.
     }
-    ExitApp
 }
 
-RunTests()
++ & esc::EndTesting() ; Abort
+
+
+OnExit, KillChildren
+
+KillChildren:
+    Global OneNotePID
+    Global AHKVimPID
+    Global VimPID
+    process, close, OneNotePID
+    process, close, AHKVimPID
+    process, close, VimPID
+return
+
 
 ; All 4 modifier keys + b initiates test.
 ;^!+#b::SendTestCommands()
