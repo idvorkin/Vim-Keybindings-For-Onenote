@@ -32,6 +32,7 @@ send :imap jj <esc>{return} ; Prepare vim
 ;       May be fixed by making the switch specific to the test page.
 Run, OneNote,,,OneNotePID
 winwait, - Microsoft OneNote ; Wait for onenote to start
+sleep, 200
 WinActivate, - Microsoft OneNote
 WinWaitActive, - Microsoft OneNote
 send ^nVim Onenote Test{return} ; Create a new page in onenote, name it, move to text section
@@ -192,26 +193,29 @@ EndTesting(){
         {
             run %LogFileName%
         }
-    ExitApp, 1 ; Failed exit
+        EndScript(1)
     }else{
         msgbox, All tests pass!
-    ExitApp, 0 ; Success.
+        EndScript(0)
     }
 }
 
-+ & esc::EndTesting() ; Abort
++ & esc::EndScript(1) ; Abort
 
 
-OnExit, KillChildren
 
-KillChildren:
+EndScript(exitCode){
     Global OneNotePID
     Global AHKVimPID
     Global VimPID
-    process, close, OneNotePID
-    process, close, AHKVimPID
-    process, close, VimPID
-return
+    process, Close, %OneNotePID%
+    process, Close, %AHKVimPID%
+    process, Close, %VimPID%
+    if exitCode = 1
+        ExitApp, 1 ; Failed exit
+    else
+        ExitApp, 0 ; Success.
+}
 
 
 ; All 4 modifier keys + b initiates test.
