@@ -52,6 +52,7 @@ SetTitleMatchMode 2 ;- Mode 2 is window title substring.
 ; which may have been sucked up as a motion.
 global PreviousMotion := ""
 global Motion := ""
+global LineWiseCopy := False
 
 Gosub InsertMode ; goto InsertMode mode on script startup
 
@@ -145,6 +146,7 @@ ConvertMotionToFunctionName(letter){
 ; Params are optional, with default values.
 InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
     global PreviousMotion
+    Global LineWiseCopy := False ; Reset from a previous double.
     if (Motion == ""){
         Motion = %A_ThisHotkey%
     }
@@ -214,10 +216,6 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
         ;     {
         ;         ; TODO outer/a (word)
         ;         InputMotionAndSelect()
-        ;     }else if motion = "g"
-        ;     {
-        ;         ; expect user is about to type another g (to go to start of doc)
-        ;     }
         ; }
 
         ; Handles cc, dd, etc.
@@ -238,6 +236,7 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
                     send {del}
                 }
                 PreviousMotion := ""
+                LineWiseCopy := True
                 return
             }
         }
@@ -455,8 +454,9 @@ return
 d::
     InputMotionAndSelect()
     send ^x
-    if IsLastHotkey("d")
+    if IsLastHotkey("d"){
         Send, {Del}
+    }
 return
 
 s::
@@ -474,11 +474,18 @@ return
     Gosub, InsertMode   
 return 
 
-; TODO handle regular paste , vs paste something picked up with yy.
-; That is, handle linewise vs in-place copy/paste. FLags maybe? ugh.
-; current behavior assumes in-place pasting/copying.
-p::Send {right}^v
-+P::Send ^v
+p::
+    if LineWiseCopy
+        send {end}{return}^v
+    else
+        Send {right}^v
+return
++P::
+    if LineWiseCopy
+        send {home}{return}{left}^v
+    else
+        Send ^v
+return
 
 ; Visual mode parameter causes function to loop, selecting until v is pressed
 v::InputMotionAndSelect(,,True)
