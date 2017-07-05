@@ -100,6 +100,7 @@ NormalMode:
         ; Send left to drop you "on" the letter you were in front of.
         send {left}
     }
+    send {shift up} ; Hopefully exit visual mode properly.
     global InNormalMode := True
     ToolTip, OneNote Vim Command Mode Active, 0, 0
 return
