@@ -2,5 +2,4 @@
 *.sw?
 *.bak
 *.*~
-tmp\
-testlogs\
+TestingLogs\

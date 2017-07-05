@@ -23,8 +23,10 @@ TestsFailed := False
 LogFileName = %A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 
 ; Initialise the programs
+SetWorkingDir %A_ScriptDir%\TestingLogs  ; Temp vim files are put out of the way.
 run, cmd.exe /r vim,,,VimPID
 winwait,  - VIM ; Wait for vim to start
+SetWorkingDir %A_ScriptDir%  
 send :imap jj <esc>{return} ; Prepare vim    
 ;TODO: Check if onenote already open. Or just ignore? multiple windows may cause problems.
 ;       May be fixed by making the switch specific to the test page.
@@ -35,8 +37,17 @@ WinWaitActive, - Microsoft OneNote
 send ^nVim Onenote Test{return} ; Create a new page in onenote, name it, move to text section
 WinMaximize,Vim Onenote Test - Microsoft OneNote
 
-run, %A_ScriptDir%/vim_onenote.ahk,,, AHKVimPID
+run, %A_ScriptDir%/vim_onenote.ahk,,, AHKVimPID ; Run our vim emulator script.
+
+; Set all our scripts and two testing programs to Above normal priority, for test reliability.
+Process, Priority, ,A ; This script
+Process, Priority, OneNotePID,A
+Process, Priority, VimPID,A
+Process, Priority, AHKVimPID,A
+; They all get killed on script end anyway.
+
 ; This is the text that all of the tests are run on, fresh.
+; Feel free to add extra lines to the end, if your test needs them.
 SampleText =
 ({return}
 This is the first line of the test, and contains a comma and a period.
@@ -55,12 +66,14 @@ And treats a wrapped line as separate lines (line 9)
 ArrayOfTests := ["" ; Base case, ensures the sample is entered the same between the two.
     ,"iAt start of first lin.{esc}ie{esc}IWord " ; Tests i,I
     ,"ahe {esc}A Also this." ; a, A]
+    ,":{return}" ; Garuanteed failure
     ,":{return}"] ; Garuanteed failure
 
 RunTests() ; Lets get this show on the road
 
 
 RunTests(){
+    msgbox, running!
     Global ArrayOfTests
     for index, test in ArrayOfTests
     {
@@ -91,13 +104,13 @@ SendTestToOnenoteAndReturnResult(test){
     Clipwait
     sendevent ^v ; Paste, for some reason normal send won't work.
     RestoreClipboard()
-    sleep, 100
+    sleep,50 
     ; Make sure we are in normal mode to start with, at start of text.
     send {esc}
     sleep, 20
     send ^{home} 
     sendevent %test%
-    sleep, 1000
+    sleep, 50
     send ^a^a^a ; Ensure we select all of the inserted text.
     output := GetSelectedText()
     ; Delete text ready for next test
@@ -111,14 +124,14 @@ SendTestToVimAndReturnResult(test){
     ; Ensure insert mode for the sample text.
     send i{backspace}
     send %SampleText%
-    sleep, 1000
+    sleep, 50
     ; Make sure we are in normal mode to start with, at start of text.
     send {esc}^{home}
     send %test%
-    sleep, 1000
+    sleep, 50
     SaveClipboard()
     clipboard= ; Empty the clipboard for clipwait to work
-    send {esc}:`%d{+} ; select all text, cut to system clipboard
+    send {esc}:`%d{numpadAdd} ; select all text, cut to system clipboard
     send {return}
     ClipWait
     output := Clipboard
@@ -149,16 +162,13 @@ CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
     ; Could also consider using comp.exe /AL instead, to compare individual characters. Possibly more useful.
     ; Comp sucks. Wow. Using fc, but only shows two lines: the different one and the one after. Hard to see, but it'll do for now.
     DiffResult := ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c fc.exe /LB2 /N OnenoteOutput VIMOutput").StdOut.ReadAll() 
-    msgbox, %DiffResult%
     IfNotInString,DiffResult, FC: no differences encountered
     {
         TestsFailed := True
-        LogFile := FileOpen(LogFileName, "w")
+        LogFile := FileOpen(LogFileName, "a")
         LogEntry := "Test = """
-        msgbox, %CurrentTest%
-        LogEntry += %CurrentTest%
+        LogEntry = Test = "%CurrentTest%"`n%DiffResult%`n`n
         LogFile.Write(LogEntry) ; "Test = ""%CurrentTest%""`n%DiffResult%`n`n")
-        msgbox Logentry %LogEntry%
         LogFile.Close()
     }
     FileDelete, OnenoteOutput
@@ -168,7 +178,6 @@ CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
 
 ; Tidy up, close programs.
 EndTesting(){
-    msgbox, endtesting
     Global TestsFailed
     Global LogFileName
     ; Delete the new page in onenote
