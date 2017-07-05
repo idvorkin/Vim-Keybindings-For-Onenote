@@ -65,15 +65,12 @@ And treats a wrapped line as separate lines (line 9)
 ; The test will be send from normal mode, with the cursor at the start of the sample text.
 ArrayOfTests := ["" ; Base case, ensures the sample is entered the same between the two.
     ,"iAt start of first lin.{esc}ie{esc}IWord " ; Tests i,I
-    ,"ahe {esc}A Also this." ; a, A]
-    ,":{return}" ; Garuanteed failure
-    ,":{return}"] ; Garuanteed failure
+    ,"ahe {esc}A Also this."] ; a, A
 
 RunTests() ; Lets get this show on the road
 
 
 RunTests(){
-    msgbox, running!
     Global ArrayOfTests
     for index, test in ArrayOfTests
     {
