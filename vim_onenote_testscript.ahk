@@ -33,10 +33,10 @@ send :imap jj <esc>{return} ; Prepare vim
 Run, OneNote,,,OneNotePID
 winwait, - Microsoft OneNote ; Wait for onenote to start
 sleep, 200
-WinActivate, - Microsoft OneNote
-WinWaitActive, - Microsoft OneNote
+WinActivate,OneNote
+WinWaitActive,OneNote
 send ^nVim Onenote Test{return} ; Create a new page in onenote, name it, move to text section
-WinMaximize,Vim Onenote Test - Microsoft OneNote
+WinMaximize,Vim Onenote Test
 
 run, %A_ScriptDir%/vim_onenote.ahk,,, AHKVimPID ; Run our vim emulator script.
 
