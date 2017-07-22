@@ -371,9 +371,9 @@ u::Send, ^z
 ; redo.
 ^r::Send, ^y
 
-; G goto to end of document
+; G goto to end of document, at start of line.
 shiftG(){
-    Send, ^{End}
+    Send, ^{End}{home}
     }
 +G::shiftG()
 
