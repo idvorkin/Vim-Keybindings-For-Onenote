@@ -36,7 +36,7 @@ sleep, 200
 WinActivate,OneNote
 WinWaitActive,OneNote
 send ^nVim Onenote Test{return} ; Create a new page in onenote, name it, move to text section
-WinMaximize,Vim Onenote Test
+WinMaximize,OneNote
 
 run, %A_ScriptDir%/vim_onenote.ahk,,, AHKVimPID ; Run our vim emulator script.
 
@@ -49,8 +49,9 @@ Process, Priority, AHKVimPID,A
 
 ; This is the text that all of the tests are run on, fresh.
 ; Feel free to add extra lines to the end, if your test needs them.
+; The test will be send from normal mode, with the cursor at the start of the sample text.
 SampleText =
-({return}
+(
 This is the first line of the test, and contains a comma and a period.
 Second line here
 3rd line. The second line is shorter than both 1st and 3rd line.
@@ -62,11 +63,27 @@ This is because onenote wraps automatically, (line 8)
 And treats a wrapped line as separate lines (line 9)
 )
 
-; Put the comma before each test string to add it to the previous line.
-; The test will be send from normal mode, with the cursor at the start of the sample text.
-ArrayOfTests := ["" ; Base case, ensures the sample is entered the same between the two.
-    ,"iAt start of first lin.{esc}ie{esc}IWord " ; Tests i,I
-    ,"ahe {esc}A Also this."] ; a, A
+; Additional test cases should be added to testcases.txt
+ArrayOfTests := [""] ; Base case, ensures the sample is entered the same between the two.
+ReadFileWithComments(ArrayOfTests)
+
+ReadFileWithComments(OutputArray){
+    Loop, read, testcases.txt
+    {
+        Line := A_LoopReadLine
+        output := StrSplit(Line, ";")
+        if(Output.Length() > 0 AND strlen(Output[1]) > 0)
+        {
+            testString := output[1]
+            ; escape special chars
+            StringReplace, testString, testString, ^, {^}, A
+            StringReplace, testString, testString, +, {+}, A
+            StringReplace, testString, testString, #, {#}, A
+            StringReplace, testString, testString, !, {!}, A
+            OutputArray.push(testString)
+        }
+    }
+}
 
 RunTests() ; Lets get this show on the road
 
@@ -75,6 +92,7 @@ RunTests(){
     Global ArrayOfTests
     for index, test in ArrayOfTests
     {
+        msgbox Current test: "%test%"
         TestAndCompareOutput(test)
     }
     EndTesting()
@@ -93,8 +111,11 @@ SwitchToOnenote(){
 SendTestToOnenoteAndReturnResult(test){
     Global SampleText
     SwitchToOnenote()
+    ; Make sure at start of body of onenote.
+    send {esc}^{home}
     ; Ensure insert mode for the sample text.
-    send i{backspace}
+    sendevent i{backspace}
+    sleep, 20
     ; Paste sample text. Faster, more reliable.
     SaveClipboard()
     Clipboard :=""
@@ -105,7 +126,7 @@ SendTestToOnenoteAndReturnResult(test){
     sleep,50 
     ; Make sure we are in normal mode to start with, at start of text.
     send {esc}
-    sleep, 20
+    sleep, 50
     send ^{home} 
     sendevent %test%
     sleep, 50
@@ -200,7 +221,6 @@ EndTesting(){
     }
 }
 
-+ & esc::EndScript(1) ; Abort
 
 
 
@@ -217,6 +237,6 @@ EndScript(exitCode){
         ExitApp, 0 ; Success.
 }
 
+EndScript(1)
 
-; All 4 modifier keys + b initiates test.
-;^!+#b::SendTestCommands()
++ & esc::EndScript(1) ; Abort
