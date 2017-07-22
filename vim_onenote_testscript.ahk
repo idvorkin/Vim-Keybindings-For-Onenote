@@ -104,15 +104,15 @@ SwitchToVim(){
 }
 
 SwitchToOnenote(){
-    WinActivate,Vim Onenote Test - Microsoft OneNote
-    WinWaitActive,Vim Onenote Test - Microsoft OneNote
+    WinActivate,OneNote
+    WinWaitActive,OneNote
 }
 
 SendTestToOnenoteAndReturnResult(test){
     Global SampleText
     SwitchToOnenote()
-    ; Make sure at start of body of onenote.
-    send {esc}^{home}
+    ; Make sure at start of body of onenote, and it's empty.
+    send ^a^a{delete}
     ; Ensure insert mode for the sample text.
     sendevent i{backspace}
     sleep, 20
