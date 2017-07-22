@@ -381,7 +381,7 @@ g(LineNumber := ""){
     if IsLastHotkey("g")
     {
         ;gg - Go to start of document
-        Send, ^{Home}
+        Send, ^{Home}{right}
     }
     ; If linenumber is not blank, was a goto command.
     else if LineNumber is Integer
