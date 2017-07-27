@@ -257,8 +257,8 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
                 send +{left 2}
                 if (motion == "d")
                 {
-                ; This has to be handled specially, in order to both cut, AND
-                ; delete new line.
+                    ; This has to be handled specially, in order to both cut, AND
+                    ; delete new line.
                     send ^x
                     send {del}
                 }
