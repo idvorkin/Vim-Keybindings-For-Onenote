@@ -66,6 +66,12 @@ InsertMode:
     hotkey, ESC, on
 return
 
+
+AllowInput:
+    Tooltiptext:=
+    Suspend, On
+return
+
 ;--------------------------------------------------------------------------------
 
 ;  ctrl + [, ESC enter Normal Mode.
@@ -173,7 +179,7 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
     ; Blockinput doesn't work without running as admin.
     loop{
     PreviousMotion := Motion
-        gosub, InsertMode
+        gosub, AllowInput
         BlockInput, Off
         ; Get next typed character, then continue
         Input, motion, L1
