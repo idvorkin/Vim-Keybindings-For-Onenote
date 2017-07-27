@@ -94,6 +94,24 @@ j::
         send j
 return
 
+; Visual mode parameter causes function to loop, selecting until v is pressed
+;v::InputMotionAndSelect(,,True)
+; Alternative "jj" equivalent. 
+v::
+    suspend, permit
+    if InNormalMode
+       InputMotionAndSelect(,,True) 
+    else if IsLastHotkey("k")
+    {
+        ; Erase k previously typed
+        send {BackSpace}
+        gosub NormalMode
+    }
+    else
+        send v
+return
+
+
 NormalMode:
     Suspend, Off
     if (InNormalMode == False)
@@ -185,26 +203,27 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
                 return
             }else if (motion = "g")
             {
-                if RepeatDigitDepth > 0
-                {
-                    ; pass the number entered as a line number
-                    send {shift down}
-                    g(repeat)
-                    send {shift up}
-                    BlockInput, Off
-                    return
-                }else{
-                    if (PreviousMotion == "g" or IsLastHotkey("g")){
+                if (PreviousMotion == "g" or IsLastHotkey("g")){
+                    ; Reset previous motion
+                    PreviousMotion = ""
+                    if RepeatDigitDepth > 0
+                    {
+                        ; pass the number entered as a line number
+                        send {shift down}
+                        g(repeat)
+                        send {shift up}
+                        BlockInput, Off
+                        return
+                    }else{
                         send ^+{Home}
-                        ; Reset previous motion
-                        PreviousMotion = ""
                         Motion = ""
                         BlockInput, off
                         send {shift up}
                         return
                     }
                 }
-
+            }else{
+                InputMotionAndSelect(Repeat, RepeatDigitDepth, VisualMode)
             }
         }
         ;     if motion = "i"
@@ -486,9 +505,6 @@ return
     else
         Send ^v
 return
-
-; Visual mode parameter causes function to loop, selecting until v is pressed
-v::InputMotionAndSelect(,,True)
 
 
 ; Search actions
