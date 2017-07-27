@@ -69,6 +69,9 @@ return
 
 AllowInput:
     Tooltiptext:=
+    ; v is used as part of "kv" shortcut, which can be run during suspension.
+    ; This must be disabled to prevent this.
+    Hotkey, v, , off 
     Suspend, On
 return
 
@@ -125,6 +128,8 @@ NormalMode:
         ; Send left to drop you "on" the letter you were in front of.
         send {left}
     }
+    ; Disabled in AllowInput, to prevent kv bug.
+    Hotkey, v, , on 
     send {shift up} ; Hopefully exit visual mode properly.
     global InNormalMode := True
     ToolTip, OneNote Vim Command Mode Active, 0, 0
