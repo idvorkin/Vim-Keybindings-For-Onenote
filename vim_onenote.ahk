@@ -370,7 +370,15 @@ j(){
 k(){
     run %A_ScriptDir%\sendUp.exe
 }
-k::k()
+; Used as part of additional normalmode shortcut "kv"
+k::
+    suspend, permit
+    if InNormalMode
+       k() 
+    else
+        send k
+return
+
 
 
 +X::shiftX()
