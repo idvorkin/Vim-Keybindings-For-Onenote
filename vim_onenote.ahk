@@ -251,6 +251,8 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
                 send +{left 2}
                 if (motion == "d")
                 {
+                    ; This has to be handled specially, in order to both cut, AND
+                    ; delete new line.
                     send ^x
                     send {del}
                 }
@@ -476,14 +478,10 @@ Send, +{End}
 Send, ^x
 return
 
-; Delete current line
-; dd handled specially, to delete newline.
+; Delete {motion}. dd deletes whole line.
 d::
     InputMotionAndSelect()
     send ^x
-    if IsLastHotkey("d"){
-        Send, {Del}
-    }
 return
 
 s::
