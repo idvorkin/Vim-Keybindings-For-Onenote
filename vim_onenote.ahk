@@ -22,7 +22,9 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 ;SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-#KeyHistory 0 ; Disables logging of keystrokes in key history
+; Keyhistory is enabled to pick up jj, kv and other key combos more accurately.
+; #KeyHistory 0 ; Disables logging of keystrokes in key history
+#InstallKeybdHook ; Used for A_Priorkey
 #Warn ; Provides code warnings when running
 ; Compilation directives to include the up and down exes.
 FileInstall, sendDown.exe, sendDown.exe
@@ -93,7 +95,7 @@ j::
     suspend, permit
     if InNormalMode
         j()
-    else if IsLastHotkey("j")
+    else if A_PriorKey = j
     {
         ; Erase j previously typed
         send {BackSpace}
@@ -110,7 +112,7 @@ v::
     suspend, permit
     if InNormalMode
        InputMotionAndSelect(,,True) 
-    else if IsLastHotkey("k")
+    else if A_PriorKey = k
     {
         ; Erase k previously typed
         send {BackSpace}
@@ -383,14 +385,8 @@ j(){
 k(){
     run %A_ScriptDir%\sendUp.exe
 }
-; Used as part of additional normalmode shortcut "kv"
-k::
-    suspend, permit
-    if InNormalMode
-       k() 
-    else
-        send k
-return
+
+k::k() 
 
 
 

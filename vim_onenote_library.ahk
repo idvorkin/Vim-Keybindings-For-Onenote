@@ -3,6 +3,11 @@ IsLastHotkey(key)
     return (A_PriorHotkey == key and A_TimeSincePriorHotkey < 800)
 }
 
+IsLastkey(key)
+{
+    return (A_Priorkey == key and A_TimeSincePriorkey < 800)
+}
+
 SaveClipboard(){
     ; push clipboard to variable
     global ClipSaved := ClipboardAll
