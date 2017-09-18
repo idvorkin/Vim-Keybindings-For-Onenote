@@ -1,5 +1,4 @@
 ﻿; This script requires vim installed on the computer. It effectively diffs the results of sending the keys below to a new onenote page vs to a new vim document.
-; Up and down are specifically lightly tested, as they will definitely do different things under vim.
 ; This may also be true of e, w and b, due to the way onenote handles words (treating punctuation as a word)
 
 ; Results are outputed as the current time and date in %A_ScriptDir%\testlogs
