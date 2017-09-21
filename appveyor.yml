@@ -4,7 +4,9 @@ branches:
   only:
     - master
 
-# init:
+init:
+  # Initialise remote desktop stuff
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 install: 
   - cinst autohotkey.install
 #  - cinst onenote
@@ -13,6 +15,23 @@ install:
 # Will fail if test fails.
 build_script:
   - cmd: build.bat
+
+on_success:
+  - git config --global credential.helper store
+  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access):x-oauth-basic@github.com`n"
+  - git config --global user.email "$env:git_email"
+  - git config --global user.name "$env:git_user"
+  - git commit ...
+  - git push ...
+
+environment:
+  APPVEYOR_RDP_PASSWORD=""
+  github_access:
+    secure: skRw6WODNCUBqrZGKZo2qDDAfOE/4YA5MvktpW7VJIncWcPhx5Q6+T3+oU5shVvy
+  git_email:
+    secure: Ai43hWJZMaTrKY0n/9bALQtFCURXqb8aCE3ZMPzjpoU=
+  git_user:
+    secure: 6y/91jUe4skCVkd8DQpFkA==
 
 
 test: off
