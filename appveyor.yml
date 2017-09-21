@@ -7,7 +7,7 @@ branches:
           # init:
 install: 
   - cinst autohotkey.install
-  - inst onenote
+#  - cinst onenote
 
   # Build.bat will include logic for running test program.
   # Will fail if test fails.
