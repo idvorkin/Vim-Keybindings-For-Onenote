@@ -41,7 +41,7 @@ on_success:
   - git checkout upstream/master
   - git add .
   - git commit -a -m "[skip ci] Appveyor build"
-  - git push origin
+  - git push origin HEAD:master
 
 deploy:
   release: vim_keybindings_for_onenote-v$(appveyor_build_version)
