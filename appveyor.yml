@@ -45,6 +45,7 @@ on_success:
 
 deploy:
   release: vim_keybindings_for_onenote-v$(appveyor_build_version)
+  description: 'CI build'
   provider: GitHub
   auth_token:
     secure: "$env:github_access" # your encrypted token from GitHub
