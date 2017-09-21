@@ -36,6 +36,9 @@ on_success:
   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access):x-oauth-basic@github.com`n"
   - git config --global user.email "$env:git_email"
   - git config --global user.name "$env:git_user"
+  - git add upstream https://github.com/idvorkin/Vim-Keybindings-For-Onenote
+  - git fetch upstream
+  - git checkout upstream/master
   - git add .
   - git commit -a -m "Appveyor build"
   - git push origin master
