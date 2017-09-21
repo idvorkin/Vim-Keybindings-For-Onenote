@@ -1,18 +1,18 @@
 version: 1.0.{build}
 
 branches:
-    only:
-        - master
+  only:
+    - master
 
-          # init:
+# init:
 install: 
   - cinst autohotkey.install
 #  - cinst onenote
 
-  # Build.bat will include logic for running test program.
-  # Will fail if test fails.
+# Build.bat will include logic for running test program.
+# Will fail if test fails.
 build_script:
-    - cmd: build.bat
+  - cmd: build.bat
 
 
 test: off
