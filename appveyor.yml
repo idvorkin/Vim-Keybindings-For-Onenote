@@ -4,6 +4,16 @@ branches:
   only:
     - master
 
+
+environment:
+  # APPVEYOR_RDP_PASSWORD=""
+  github_access:
+    secure: skRw6WODNCUBqrZGKZo2qDDAfOE/4YA5MvktpW7VJIncWcPhx5Q6+T3+oU5shVvy
+  git_email:
+    secure: Ai43hWJZMaTrKY0n/9bALQtFCURXqb8aCE3ZMPzjpoU=
+  git_user:
+    secure: 6y/91jUe4skCVkd8DQpFkA==
+
 init:
   # Initialise remote desktop stuff
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -26,14 +36,9 @@ on_success:
   - git commit -a -m "Appveyor build"
   - git push origin master
 
-environment:
-  # APPVEYOR_RDP_PASSWORD=""
-  github_access:
-    secure: skRw6WODNCUBqrZGKZo2qDDAfOE/4YA5MvktpW7VJIncWcPhx5Q6+T3+oU5shVvy
-  git_email:
-    secure: Ai43hWJZMaTrKY0n/9bALQtFCURXqb8aCE3ZMPzjpoU=
-  git_user:
-    secure: 6y/91jUe4skCVkd8DQpFkA==
 
+# Allow remote desktop access
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 test: off
