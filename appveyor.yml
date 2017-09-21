@@ -35,7 +35,7 @@ on_success:
   - git config --global credential.helper store
   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access):x-oauth-basic@github.com`n"
   - git config --global user.email "$env:git_email"
-  - git config --global user.name "$env:git_user"
+  - git config --global user.name $env:git_user
   - git remote add upstream https://github.com/idvorkin/Vim-Keybindings-For-Onenote
   - git fetch upstream
   - git checkout upstream/master
