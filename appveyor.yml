@@ -22,7 +22,7 @@ on_success:
   - git config --global user.email "$env:git_email"
   - git config --global user.name "$env:git_user"
   - git commit -a -m "Appveyor build"
-  - git push origin HEAD:https://github.com/idvorkin/Vim-Keybindings-For-Onenote
+  - git push origin HEAD
 
 environment:
   # APPVEYOR_RDP_PASSWORD=""
