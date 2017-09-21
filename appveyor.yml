@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: 0.1.{build}
 
 branches:
   only:
@@ -22,7 +22,7 @@ on_success:
   - git config --global user.email "$env:git_email"
   - git config --global user.name "$env:git_user"
   - git commit -a -m "Appveyor build"
-  - git push
+  - git push origin HEAD:https://github.com/idvorkin/Vim-Keybindings-For-Onenote
 
 environment:
   # APPVEYOR_RDP_PASSWORD=""
