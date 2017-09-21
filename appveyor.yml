@@ -25,7 +25,7 @@ on_success:
   - git push ...
 
 environment:
-  APPVEYOR_RDP_PASSWORD=""
+  # APPVEYOR_RDP_PASSWORD=""
   github_access:
     secure: skRw6WODNCUBqrZGKZo2qDDAfOE/4YA5MvktpW7VJIncWcPhx5Q6+T3+oU5shVvy
   git_email:
