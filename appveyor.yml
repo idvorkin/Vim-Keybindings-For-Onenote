@@ -4,10 +4,10 @@ branches:
     only:
         - master
 
-init:
-    install: 
-    - cinst autohotkey.install
-    - cinst onenote
+          # init:
+install: 
+  - cinst autohotkey.install
+  - inst onenote
 
   # Build.bat will include logic for running test program.
   # Will fail if test fails.
