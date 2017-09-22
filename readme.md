@@ -10,7 +10,6 @@ This project uses [AutoHotKey](http://www.autohotkey.com/). If you don't have au
 You can run the VIM keybinding via autohotkey, or by downloading and running the prebuilt executable.
 
 Run Vim keybindings via prebuilt executable
-Note that this may not be as up to date as the script.
 -----
 
 Download [vim\_onenote.exe](https://github.com/idvorkin/Vim-Keybindings-For-Onenote/raw/master/vim_onenote.exe)
@@ -69,4 +68,3 @@ Quirks
 -----
 There are lots of quirks because AutoHotKey doesn't know the current cursor location, and OneNote behaves differently based on the cursor location. I'll list some of the bigger ones here
 * Fold only works in list mode.
-* Up and down motions cannot be used with commands
