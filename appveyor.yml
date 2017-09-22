@@ -48,7 +48,7 @@ deploy:
   description: 'CI build'
   provider: GitHub
   auth_token:
-    secure: "$env:github_access" # your encrypted token from GitHub
+  secure: $(github_access) # your encrypted token from GitHub
   artifact: Executable
   draft: false
   prerelease: false
