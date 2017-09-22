@@ -31,7 +31,7 @@ install:
 build_script:
   - cmd: build.bat
 
-on_success:
+after_tests:
   - git status
   - git config --global credential.helper store
   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access):x-oauth-basic@github.com`n"
@@ -53,9 +53,8 @@ deploy:
   artifact: Executable
   draft: false
   prerelease: true
-  appveyor_repo_tag: true        # deploy on tag push only
   on:
-    branch: master                 # release from master branch only
+    appveyor_repo_tag: true        # deploy on tag push only
 
 # Allow remote desktop access
 on_finish:
