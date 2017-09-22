@@ -21,7 +21,7 @@ artifacts:
 init:
   # Initialise remote desktop stuff
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-  - cmd: echo %git_user%
+  - cmd: echo %git_user% "$env:git_user" $env:git_user
 install: 
   - cinst autohotkey.install
 #  - cinst onenote
@@ -35,8 +35,8 @@ on_success:
   - git status
   - git config --global credential.helper store
   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access):x-oauth-basic@github.com`n"
-  - git config --global user.email $(git_email)
-  - git config --global user.name $(git_user)
+  - git config --global user.email %git_email%
+  - git config --global user.name %git_user%
   - git config --list
   - git remote add upstream https://github.com/idvorkin/Vim-Keybindings-For-Onenote
   - git fetch upstream
