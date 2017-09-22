@@ -27,11 +27,11 @@ install:
 #  - cinst onenote
 
 # Build.bat will include logic for running test program.
-# Will fail if test fails.
+# Will faiL if test fails.
 build_script:
   - cmd: build.bat
 
-after_tests:
+after_test:
   - git status
   - git config --global credential.helper store
   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access):x-oauth-basic@github.com`n"
