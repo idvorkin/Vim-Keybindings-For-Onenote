@@ -58,7 +58,7 @@ global LineWiseCopy := False
 
 Gosub InsertMode ; goto InsertMode mode on script startup
 
-i=hello
+
 ;--------------------------------------------------------------------------------
 ; Return to InsertMode
 InsertMode:
@@ -91,7 +91,7 @@ return
 
 ; jj has to be implemented differently because of how insert mode works.
 ; This also fires the function for moving down.
-i::
+j::
     suspend, permit
     if InNormalMode
         j()
