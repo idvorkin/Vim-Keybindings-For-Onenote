@@ -22,7 +22,9 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 ;SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-#KeyHistory 0 ; Disables logging of keystrokes in key history
+; Keyhistory is enabled to pick up jj, kv and other key combos more accurately.
+; #KeyHistory 0 ; Disables logging of keystrokes in key history
+#InstallKeybdHook ; Used for A_Priorkey
 #Warn ; Provides code warnings when running
 ; Compilation directives to include the up and down exes.
 FileInstall, sendDown.exe, sendDown.exe
@@ -69,6 +71,9 @@ return
 
 AllowInput:
     Tooltiptext:=
+    ; v is used as part of "kv" shortcut, which can be run during suspension.
+    ; This must be disabled to prevent this.
+    Hotkey, v, , off 
     Suspend, On
 return
 
@@ -90,7 +95,7 @@ j::
     suspend, permit
     if InNormalMode
         j()
-    else if IsLastHotkey("j")
+    else if A_PriorKey = j
     {
         ; Erase j previously typed
         send {BackSpace}
@@ -107,7 +112,7 @@ v::
     suspend, permit
     if InNormalMode
        InputMotionAndSelect(,,True) 
-    else if IsLastHotkey("k")
+    else if A_PriorKey = k
     {
         ; Erase k previously typed
         send {BackSpace}
@@ -125,6 +130,8 @@ NormalMode:
         ; Send left to drop you "on" the letter you were in front of.
         send {left}
     }
+    ; Disabled in AllowInput, to prevent kv bug.
+    Hotkey, v, , on 
     send {shift up} ; Hopefully exit visual mode properly.
     global InNormalMode := True
     ToolTip, OneNote Vim Command Mode Active, 0, 0
@@ -257,6 +264,8 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
                 send +{left 2}
                 if (motion == "d")
                 {
+                    ; This has to be handled specially, in order to both cut, AND
+                    ; delete new line.
                     send ^x
                     send {del}
                 }
@@ -376,14 +385,8 @@ j(){
 k(){
     run %A_ScriptDir%\sendUp.exe
 }
-; Used as part of additional normalmode shortcut "kv"
-k::
-    suspend, permit
-    if InNormalMode
-       k() 
-    else
-        send k
-return
+
+k::k() 
 
 
 
@@ -482,14 +485,10 @@ Send, +{End}
 Send, ^x
 return
 
-; Delete current line
-; dd handled specially, to delete newline.
+; Delete {motion}. dd deletes whole line.
 d::
     InputMotionAndSelect()
     send ^x
-    if IsLastHotkey("d"){
-        Send, {Del}
-    }
 return
 
 s::

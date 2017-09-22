@@ -1,0 +1,63 @@
+version: 0.1.{build}
+
+branches:
+  only:
+    - master
+
+
+environment:
+  # APPVEYOR_RDP_PASSWORD=""
+  github_access:
+    secure: skRw6WODNCUBqrZGKZo2qDDAfOE/4YA5MvktpW7VJIncWcPhx5Q6+T3+oU5shVvy
+  git_email:
+    secure: Ai43hWJZMaTrKY0n/9bALQtFCURXqb8aCE3ZMPzjpoU=
+  git_user:
+    secure: 6y/91jUe4skCVkd8DQpFkA==
+
+artifacts:
+  - path: vim_onenote.exe
+    name: Executable
+
+init:
+  # Initialise remote desktop stuff
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+install: 
+  - cinst autohotkey.install
+#  - cinst onenote
+
+# Build.bat will include logic for running test program.
+# Will fail if test fails.
+build_script:
+  - cmd: build.bat
+
+on_success:
+  - git status
+  - git config --global credential.helper store
+  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access):x-oauth-basic@github.com`n"
+  - git config --global user.email "$env:git_email"
+  - git config --global user.name $env:git_user
+  - git remote add upstream https://github.com/idvorkin/Vim-Keybindings-For-Onenote
+  - git fetch upstream
+  - git checkout upstream/master
+  - git add .
+  - git commit -a -m "[skip ci] Appveyor build"
+  - git push origin HEAD:master
+
+deploy:
+  release: vim_keybindings_for_onenote-v$(appveyor_build_version)
+  description: 'CI build'
+  provider: GitHub
+  auth_token:
+    secure: "$env:github_access" # your encrypted token from GitHub
+  artifact: Executable
+  draft: false
+  prerelease: false
+  on:
+    branch: master                 # release from master branch only
+    appveyor_repo_tag: true        # deploy on tag push only
+
+# Allow remote desktop access
+on_finish:
+  #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+test: off
