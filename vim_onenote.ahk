@@ -58,7 +58,7 @@ global LineWiseCopy := False
 
 Gosub InsertMode ; goto InsertMode mode on script startup
 
-
+i=hello
 ;--------------------------------------------------------------------------------
 ; Return to InsertMode
 InsertMode:
