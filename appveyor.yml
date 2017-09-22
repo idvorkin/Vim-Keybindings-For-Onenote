@@ -1,4 +1,4 @@
-version: 0.1.{build}
+version: 0.5.{build}
 
 branches:
   only:
@@ -52,9 +52,9 @@ deploy:
   artifact: Executable
   draft: false
   prerelease: false
+  appveyor_repo_tag: true        # deploy on tag push only
   on:
     branch: master                 # release from master branch only
-    appveyor_repo_tag: true        # deploy on tag push only
 
 # Allow remote desktop access
 on_finish:
