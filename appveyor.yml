@@ -8,7 +8,7 @@ branches:
 environment:
   # APPVEYOR_RDP_PASSWORD=""
   github_access:
-    secure: skRw6WODNCUBqrZGKZo2qDDAfOE/4YA5MvktpW7VJIncWcPhx5Q6+T3+oU5shVvy
+    secure: qls7CpW54Nf3d/r2FRdxQJVsZEOZRIKnUNLmEV+OmiYv7jl3y+hZjTZF7hL4XUgw
   git_email:
     secure: Ai43hWJZMaTrKY0n/9bALQtFCURXqb8aCE3ZMPzjpoU=
   git_user:
