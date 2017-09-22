@@ -91,7 +91,7 @@ return
 
 ; jj has to be implemented differently because of how insert mode works.
 ; This also fires the function for moving down.
-j::
+i::
     suspend, permit
     if InNormalMode
         j()
