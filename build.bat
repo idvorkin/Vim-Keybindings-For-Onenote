@@ -5,7 +5,7 @@ SET Param1=%1
 
 if "%Param1%"=="/t" (
     Start "%AHKPath%\Autohotkey.exe" vim_onenote.ahk 
-    "%AHKPath%\Autohotkey.exe" vim_onenote_testscript.ahk 
+    "%AHKPath%\Autohotkey.exe" vim_onenote_testscript.ahk -quiet
 )
 REM Return code from above (0 if tests all pass) is stored in %errorlevel%
 if errorlevel 1 (
