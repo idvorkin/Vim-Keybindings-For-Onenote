@@ -38,7 +38,7 @@ send :imap jj <esc>{return} ; Prepare vim
 ;TODO: Check if onenote already open. Or just ignore? multiple windows may cause problems.
 ;       May be fixed by making the switch specific to the test page.
 Run, OneNote,,,OneNotePID
-winwait, - Microsoft OneNote ; Wait for onenote to start
+winwait, - OneNote ; Wait for onenote to start
 sleep, 200
 WinActivate,OneNote
 WinWaitActive,OneNote
