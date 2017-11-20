@@ -31,8 +31,8 @@ LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 
 ; Initialise the programs
 SetWorkingDir %A_ScriptDir%\TestingLogs  ; Temp vim files are put out of the way.
-run, cmd.exe /r vim,,,VimPID
-winwait,  - VIM ; Wait for vim to start
+run, cmd.exe /r gvim,,,VimPID
+winwait,  - GVIM ; Wait for vim to start
 SetWorkingDir %A_ScriptDir%  
 send :imap jj <esc>{return} ; Prepare vim    
 ;TODO: Check if onenote already open. Or just ignore? multiple windows may cause problems.
@@ -106,8 +106,8 @@ RunTests(){
 }
 
 SwitchToVim(){
-    WinActivate,  - VIM
-    WinWaitActive,  - VIM
+    WinActivate,  - GVIM
+    WinWaitActive,  - GVIM
 }
 
 SwitchToOnenote(){

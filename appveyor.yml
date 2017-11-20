@@ -30,7 +30,7 @@ install:
 # Build.bat includes logic for running test program.
 # Will fail if test fails.
 build_script:
-  - cmd: build.bat
+  - cmd: build.bat /t
 
 after_test:
   - git status
