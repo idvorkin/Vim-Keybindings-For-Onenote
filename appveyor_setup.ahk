@@ -27,10 +27,12 @@ sleep, 50
 send {return}
 sleep, 50
 send {return}
+sleep, 50
+send {return}
 
 Run, OneNote,,,OneNotePID
 ; winwait, - Microsoft OneNote ; Wait for onenote to start
-sleep, 300
+sleep, 500
 send {return}
 WinActivate,OneNote
 WinWaitActive,OneNote
@@ -38,7 +40,7 @@ WinWaitActive,OneNote
 send {return}
 sleep, 100
 send {return}
-sleep, 100
+sleep, 500
 
 run C:\projects\vim-keybindings-for-onenote\test.one
 sleep, 200
@@ -46,4 +48,4 @@ winwait,OneNote ; Wait for onenote to start
 sleep, 501
 WinActivate,OneNote
 WinWaitActive,OneNote
-send !{f4}
+send ^n{return}
