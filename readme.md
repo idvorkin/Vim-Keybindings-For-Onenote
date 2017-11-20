@@ -1,9 +1,10 @@
-[!Appveyor master branch status](https://ci.appveyor.com/api/projects/status/github/idvorkin/Vim-Keybindings-For-Onenote?branch=master&svg=true)
-[![Stories in Ready](https://badge.waffle.io/idvorkin/Vim-Keybindings-For-Onenote.png?label=ready&title=Ready)](https://waffle.io/idvorkin/Vim-Keybindings-For-Onenote?utm_source=badge)
 VIM keybindings for OneNote
 ====
 
+[![Appveyor master branch status]](https://ci.appveyor.com/api/projects/status/github/idvorkin/Vim-Keybindings-For-Onenote?branch=master&svg=true)
+[![Stories in Ready](https://badge.waffle.io/idvorkin/Vim-Keybindings-For-Onenote.png?label=ready&title=Ready)](https://waffle.io/idvorkin/Vim-Keybindings-For-Onenote?utm_source=badge)
 [![Join the chat at https://gitter.im/idvorkin/Vim-Keybindings-For-Onenote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/idvorkin/Vim-Keybindings-For-Onenote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 VIM keybindings for OneNote brings the efficiency of VIM to the organizing power of Onenote. 
 
 This project uses [AutoHotKey](http://www.autohotkey.com/). If you don't have autohotkey installed you can still run prebuilt executables. 
