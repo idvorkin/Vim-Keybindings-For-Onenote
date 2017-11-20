@@ -12,13 +12,10 @@ UrlDownloadToFile, https://www.onenotegem.com/uploads/8/5/1/8/8518752/things_to_
 ; This registry entry bypasses the signin.
 RegContents =
 (
-Windows Registry Editor Version 5.0
-
-[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\OneNote]
-
-"FirstBootStatus"=dword:01000101
-
-"OneNoteName"="OneNote"
+Windows Registry Editor Version 5.0`r
+[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\OneNote]`r
+"FirstBootStatus"=dword:01000101`r
+"OneNoteName"="OneNote"`r
 )
 RegFileName=%A_ScriptDir%\avoidONSignin.reg
 RegFile := FileOpen(RegFileName, "w")
@@ -41,7 +38,7 @@ send {return}
 sleep, 100
 
 run C:\projects\vim-keybindings-for-onenote\test.one
-winwait, - Microsoft OneNote ; Wait for onenote to start
+winwait,OneNote ; Wait for onenote to start
 sleep, 300
 WinActivate,OneNote
 WinWaitActive,OneNote
