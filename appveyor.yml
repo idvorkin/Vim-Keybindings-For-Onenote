@@ -23,9 +23,9 @@ init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 install: 
   - cinst autohotkey.install
-#  - cinst onenote
+  - cinst onenote
 
-# Build.bat will include logic for running test program.
+# Build.bat includes logic for running test program.
 # Will fail if test fails.
 build_script:
   - cmd: build.bat
