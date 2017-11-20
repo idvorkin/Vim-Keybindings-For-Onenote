@@ -49,3 +49,5 @@ sleep, 501
 WinActivate,OneNote
 WinWaitActive,OneNote
 send ^n{return}
+sleep, 700
+send {return}

@@ -30,9 +30,9 @@ install:
 
 # Build.bat includes logic for running test program.
 # Will fail if test fails.
+# Appveyor setup prepares onenote for use without registration
 build_script:
-  - cmd: start "C:\\Program Files\\AutoHotkey\\Autohotkey.exe" "C:\\Projects\\vim-keybindings-for-onenote\\appveyor_setup.ahk"
-  - cmd: build.bat /t
+  - cmd: start "C:\\Program Files\\AutoHotkey\\Autohotkey.exe" "C:\\Projects\\vim-keybindings-for-onenote\\appveyor_setup.ahk" && build.bat /t
 
 after_test:
   - git status
