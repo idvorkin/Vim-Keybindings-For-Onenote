@@ -27,7 +27,7 @@ if (arg1 == "-quiet"){
 }
 
 TestsFailed := False
-LogFileName = %A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
+LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 
 ; Initialise the programs
 SetWorkingDir %A_ScriptDir%\TestingLogs  ; Temp vim files are put out of the way.

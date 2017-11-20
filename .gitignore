@@ -2,5 +2,5 @@
 *.sw?
 *.bak
 *.*~
-TestingLogs/
+testLogs/
 *.exe
