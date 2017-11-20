@@ -17,6 +17,14 @@ SetKeyDelay, 50 ; Only affects sendevent, used for sending the test
 ; Contains clipboard related functions, among others.
 #include %A_ScriptDir%\vim_onenote_library.ahk
 
+; 1 optional commandline argument, -quiet, stops ouput at the end of the tests.
+; Used for CI testing.
+arg1 = %1%
+if (arg1 == "-quiet"){
+    QuietMode := True
+}else{
+    QuietMode := False
+}
 
 TestsFailed := False
 LogFileName = %A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
@@ -91,7 +99,7 @@ RunTests(){
     Global ArrayOfTests
     for index, test in ArrayOfTests
     {
-        msgbox Current test: "%test%"
+        ; msgbox Current test: "%test%"
         TestAndCompareOutput(test)
     }
     EndTesting()
@@ -198,6 +206,7 @@ CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
 EndTesting(){
     Global TestsFailed
     Global LogFileName
+    Global QuietMode
     ; Delete the new page in onenote
     SwitchToOnenote()
     send ^+A
@@ -208,14 +217,18 @@ EndTesting(){
    
     if (TestsFailed == True)
     {
-        msgbox,4,,At least one test has failed!`nResults are in %LogFileName%`nOpen log? 
-        IfMsgBox Yes
-        {
-            run %LogFileName%
+        if not QuietMode {
+            msgbox,4,,At least one test has failed!`nResults are in %LogFileName%`nOpen log? 
+            IfMsgBox Yes
+            {
+                run %LogFileName%
+            }
         }
         EndScript(1)
     }else{
-        msgbox, All tests pass!
+        if not QuietMode {
+            msgbox, All tests pass!
+        }
         EndScript(0)
     }
 }
