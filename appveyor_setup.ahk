@@ -19,6 +19,8 @@ send {return}
 send %ONUser%{return}
 sleep, 200
 send %ONPass%{return}
+winwait,office
+send {return}
 winwait,OneNote ; Wait for onenote to start
 sleep, 200
 WinActivate,OneNote
