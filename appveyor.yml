@@ -24,7 +24,7 @@ init:
 install: 
   # Chocolaty install autohotkey and onenote
   - cinst autohotkey.install
-  - cinst onenote
+  - cinst onenote --ignore-checksums
 
 # Build.bat includes logic for running test program.
 # Will fail if test fails.
