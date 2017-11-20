@@ -31,7 +31,7 @@ install:
 # Build.bat includes logic for running test program.
 # Will fail if test fails.
 build_script:
-  - cmd: ''"C:\Program Files\AutoHotkey\Autohotkey.exe" "C:\Projects\vim-keybindings-for-onenote\appveyor_setup.ahk"'
+  - cmd: "C:\\Program Files\\AutoHotkey\\Autohotkey.exe" "C:\\Projects\\vim-keybindings-for-onenote\\appveyor_setup.ahk"
   - cmd: build.bat /t
 
 after_test:
