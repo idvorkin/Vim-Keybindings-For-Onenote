@@ -25,6 +25,9 @@ artifacts:
 init:
   # Initialise remote desktop stuff
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  # Set env variables
+  - cmd: setx onenoteUser %onenoteUser%
+  - cmd: setx onenotePass %onenotePass%
  
 install: 
   # Chocolaty install autohotkey and onenote

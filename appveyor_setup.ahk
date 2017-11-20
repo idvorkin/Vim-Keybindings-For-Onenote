@@ -10,13 +10,22 @@ msgbox
 
 ; Env variables encrypted by appveyor.
 ; Store login info to use for onenote registration.
-EnvGet, ONUser, onenoteUser
-EnvGet, ONPass, onenotePass
+; Env variables encrypted by appveyor.
+; Store login info to use for onenote registration.
+EnvGet,ONUser,OnenoteUser
+EnvGet,ONPass,OnenotePass
 
 Run, OneNote,,,OneNotePID
+
+sleep, 500
+WinActivate,OneNote
+WinWaitActive,OneNote
 sleep, 500
 send {return}
-send %ONUser%{return}
+WinWaitActive,Accounts
+sleep, 500
+send %ONUser%
+send {return}
 sleep, 200
 send %ONPass%{return}
 winwait,Office
@@ -25,6 +34,8 @@ winwait,OneNote ; Wait for onenote to start
 sleep, 200
 WinActivate,OneNote
 WinWaitActive,OneNote
+; wait for notebook load
+sleep, 2000
 
 
 /* Not using this method because it is too unreliable for testing
