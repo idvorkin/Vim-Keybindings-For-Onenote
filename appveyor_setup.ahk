@@ -12,8 +12,12 @@ UrlDownloadToFile, https://www.onenotegem.com/uploads/8/5/1/8/8518752/things_to_
 ; This registry entry bypasses the signin.
 RegContents =
 (
+Windows Registry Editor Version 5.0
+
 [HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\OneNote]
-"FirstBootStatus"=dword:02000104
+
+"FirstBootStatus"=dword:01000101
+
 "OneNoteName"="OneNote"
 )
 RegFileName=%A_ScriptDir%\avoidONSignin.reg
@@ -21,11 +25,13 @@ RegFile := FileOpen(RegFileName, "w")
 RegFile.Write(RegContents)
 RegFile.Close()
 run %RegFileName%
+sleep, 50
 send {return}
 
 Run, OneNote,,,OneNotePID
-winwait, - Microsoft OneNote ; Wait for onenote to start
+; winwait, - Microsoft OneNote ; Wait for onenote to start
 sleep, 300
+send {return}
 WinActivate,OneNote
 WinWaitActive,OneNote
 ; Skip signin dialogues, add new notebook.
