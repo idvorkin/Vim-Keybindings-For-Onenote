@@ -6,11 +6,14 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 #SingleInstance Force
 
+; Demo .one file to skip new notebook creation
+UrlDownloadToFile, "https://www.onenotegem.com/uploads/8/5/1/8/8518752/things_to_do_list.one", "%A_Scriptdir%\test.one"
+
 ; This registry entry bypasses the signin.
 RegContents =
 (
 [HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\OneNote]
-"FirstBootStatus"=dword:02000102
+"FirstBootStatus"=dword:02000104
 "OneNoteName"="OneNote"
 )
 RegFileName=%A_ScriptDir%\avoidONSignin.reg
