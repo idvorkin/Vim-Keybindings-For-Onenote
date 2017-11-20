@@ -1,7 +1,7 @@
 VIM keybindings for OneNote
 ====
 
-[![Appveyor master branch status](https://ci.appveyor.com/api/projects/status/github/idvorkin/Vim-Keybindings-For-Onenote?branch=master&svg=true)](https://ci.appveyor.com/project/BlueDrink9/vim-keybindings-for-onenote)
+[![Appveyor master branch status](https://ci.appveyor.com/api/projects/status/github/idvorkin/Vim-Keybindings-For-Onenote?branch=master)](https://ci.appveyor.com/project/BlueDrink9/vim-keybindings-for-onenote)
 [![Stories in Ready](https://badge.waffle.io/idvorkin/Vim-Keybindings-For-Onenote.png?label=ready&title=Ready)](https://waffle.io/idvorkin/Vim-Keybindings-For-Onenote?utm_source=badge)
 [![Join the chat at https://gitter.im/idvorkin/Vim-Keybindings-For-Onenote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/idvorkin/Vim-Keybindings-For-Onenote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
