@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 #SingleInstance Force
-sleep, 10000
+msgbox
 ; Demo .one file to skip new notebook creation
 UrlDownloadToFile, https://www.onenotegem.com/uploads/8/5/1/8/8518752/things_to_do_list.one, %A_Scriptdir%\test.one
 
@@ -23,6 +23,8 @@ RegFile := FileOpen(RegFileName, "w")
 RegFile.Write(RegContents)
 RegFile.Close()
 run %RegFileName%
+sleep, 50
+send {return}
 sleep, 50
 send {return}
 
@@ -43,4 +45,4 @@ winwait,OneNote ; Wait for onenote to start
 sleep, 300
 WinActivate,OneNote
 WinWaitActive,OneNote
-send !f4
+send !{f4}
