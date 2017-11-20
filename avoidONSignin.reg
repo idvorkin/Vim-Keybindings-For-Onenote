@@ -1,7 +1,0 @@
-Windows Registry Editor Version 5.0
-
-[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\OneNote]
-
-"FirstBootStatus"=dword:01000101
-
-"OneNoteName"="OneNote"
