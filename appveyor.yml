@@ -22,7 +22,7 @@ init:
   # Initialise remote desktop stuff
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   # Demonstration onenote file to skip requirement for new notebook creation
-  wget https://www.onenotegem.com/uploads/8/5/1/8/8518752/things_to_do_list.one > C:\projects\vim-keybindings-for-onenote\test.one
+  - wget https://www.onenotegem.com/uploads/8/5/1/8/8518752/things_to_do_list.one > C:\projects\vim-keybindings-for-onenote\test.one
  
 install: 
   # Chocolaty install autohotkey and onenote
