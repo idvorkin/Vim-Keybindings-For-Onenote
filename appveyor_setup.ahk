@@ -43,7 +43,7 @@ sleep, 100
 run C:\projects\vim-keybindings-for-onenote\test.one
 sleep, 200
 winwait,OneNote ; Wait for onenote to start
-sleep, 500
+sleep, 501
 WinActivate,OneNote
 WinWaitActive,OneNote
 send !{f4}
