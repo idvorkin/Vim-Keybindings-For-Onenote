@@ -13,6 +13,10 @@ environment:
     secure: Ai43hWJZMaTrKY0n/9bALQtFCURXqb8aCE3ZMPzjpoU=
   git_user:
     secure: 6y/91jUe4skCVkd8DQpFkA==
+  onenoteUser:
+    secure: PdIwrjncAGjHRbc1LcXwjLFWeYA04T9K+nYIpTW9AFs=
+  onenotePass
+    secure: b6yIKUeWCVYQtWDkHfOa5aTphidnbBbx42gYk3RM8i8OisezTSRFiniXohCBHk5w
 
 artifacts:
   - path: vim_onenote.exe

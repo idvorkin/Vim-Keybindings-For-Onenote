@@ -5,7 +5,28 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 #SingleInstance Force
+SetTitleMatchMode 2
 msgbox
+
+; Env variables encrypted by appveyor.
+; Store login info to use for onenote registration.
+EnvGet, ONUser, onenoteUser
+EnvGet, ONPass, onenotePass
+
+Run, OneNote,,,OneNotePID
+sleep, 500
+send {return}
+send %ONUser%{return}
+sleep, 200
+send %ONPass%{return}
+winwait,OneNote ; Wait for onenote to start
+sleep, 200
+WinActivate,OneNote
+WinWaitActive,OneNote
+
+
+/* Not using this method because it is too unreliable for testing
+
 ; Demo .one file to skip new notebook creation
 UrlDownloadToFile, https://www.onenotegem.com/uploads/8/5/1/8/8518752/things_to_do_list.one, %A_Scriptdir%\test.one
 
@@ -51,3 +72,4 @@ WinWaitActive,OneNote
 send ^n{return}
 sleep, 700
 send {return}
+*/
