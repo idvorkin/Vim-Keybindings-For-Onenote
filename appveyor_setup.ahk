@@ -26,7 +26,7 @@ WinWaitActive,Accounts
 sleep, 500
 send %ONUser%
 send {return}
-sleep, 200
+sleep, 1000
 send %ONPass%{return}
 winwait,Office
 send {return}

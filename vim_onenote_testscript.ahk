@@ -42,6 +42,7 @@ winwait,OneNote ; Wait for onenote to start
 sleep, 200
 WinActivate,OneNote
 WinWaitActive,OneNote
+sleep, 300
 send ^nVim Onenote Test{return} ; Create a new page in onenote, name it, move to text section
 WinMaximize,OneNote
 
