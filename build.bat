@@ -9,11 +9,11 @@ if "%Param1%"=="/t" (
 REM Return code from above (0 if tests all pass) is stored in %errorlevel%
 if errorlevel 1 (
    echo Tests failed. Exe not built. Log contents:
-   echo 
-   echo 
+   echo  
+   echo  
    type testLogs\*
-   echo 
-   echo 
+   echo  
+   echo  
    exit /b %errorlevel%
 )
 REM You need intall ahk2exe, this script assumes it is at \bin_drop\ahk2exe
