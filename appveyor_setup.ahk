@@ -14,8 +14,8 @@ SetTitleMatchMode 2
 EnvGet,ONUser,OnenoteUser
 EnvGet,ONPass,OnenotePass
 
-Run, OneNote,,,OneNotePID
 run, gvim,,,VimPID
+Run, OneNote,,,OneNotePID
 
 sleep, 500
 WinActivate,OneNote
