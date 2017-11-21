@@ -15,6 +15,7 @@ EnvGet,ONUser,OnenoteUser
 EnvGet,ONPass,OnenotePass
 
 Run, OneNote,,,OneNotePID
+run, gvim,,,VimPID
 
 sleep, 500
 WinActivate,OneNote
