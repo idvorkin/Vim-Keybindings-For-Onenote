@@ -104,7 +104,7 @@ RunTests(){
     Global ArrayOfTests
     for index, test in ArrayOfTests
     {
-        msgbox Current test: "%test%"
+        ; msgbox Current test: "%test%"
         TestAndCompareOutput(test)
     }
     EndTesting()

@@ -17,13 +17,13 @@ EnvGet,ONPass,OnenotePass
 run, gvim,,,VimPID
 Run, OneNote,,,OneNotePID
 
-sleep, 500
+sleep, 1000
 WinActivate,OneNote
 WinWaitActive,OneNote
-sleep, 500
+sleep, 1000
 send {return}
 WinWaitActive,Accounts
-sleep, 500
+sleep, 1000
 send %ONUser%
 send {return}
 sleep, 2000

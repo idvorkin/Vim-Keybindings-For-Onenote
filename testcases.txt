@@ -19,7 +19,7 @@ iAt start of first lin.{esc}ie{esc}IWord ; i,I
 ahe {esc}A Also this.; a, A
 w$^ihBOL; ^
 $bbbi[3rd word from end]; b with punctuation?
-dd{control down}{end}{control up}p; delete line, paste linewise at final line.
+; dd{control down}{end}{control up}p; delete line, paste linewise at final line.
 dw; d with single motion
 d4w; d with repeat motion
 GiEOF; G, go to end of file.
