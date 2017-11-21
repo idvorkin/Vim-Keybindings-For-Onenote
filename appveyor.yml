@@ -34,12 +34,12 @@ install:
   - cinst autohotkey.install
   - cinst onenote --ignore-checksums
   - cinst vim
+  - cmd: refreshenv
 
 # Build.bat includes logic for running test program.
 # Will fail if test fails.
 # Appveyor setup prepares onenote for use without registration
 build_script:
-  - cmd: refreshenv
   - cmd: start /w "C:\\Program Files\\AutoHotkey\\Autohotkey.exe" "C:\\Projects\\vim-keybindings-for-onenote\\appveyor_setup.ahk" && build.bat /t
 
 after_test:
