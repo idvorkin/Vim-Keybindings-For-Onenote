@@ -26,7 +26,7 @@ WinWaitActive,Accounts
 sleep, 500
 send %ONUser%
 send {return}
-sleep, 1000
+sleep, 1500
 send %ONPass%{return}
 winwait,Office
 send {return}
@@ -35,7 +35,7 @@ sleep, 200
 WinActivate,OneNote
 WinWaitActive,OneNote
 ; wait for notebook load
-sleep, 2000
+sleep, 2500
 
 
 /* Not using this method because it is too unreliable for testing
