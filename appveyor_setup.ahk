@@ -6,7 +6,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 #SingleInstance Force
 SetTitleMatchMode 2
-msgbox
 
 ; Env variables encrypted by appveyor.
 ; Store login info to use for onenote registration.
