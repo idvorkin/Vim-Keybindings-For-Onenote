@@ -4,7 +4,7 @@ REM Takes a sinple optional command parameter, /t, which starts testing.
 SET Param1=%1
 
 if "%Param1%"=="/t" (
-    "%AHKPath%\Autohotkey.exe" vim_onenote_testscript.ahk -quiet
+    start /w "%AHKPath%\Autohotkey.exe" vim_onenote_testscript.ahk -quiet
 )
 REM Return code from above (0 if tests all pass) is stored in %errorlevel%
 if errorlevel 1 (
