@@ -11,6 +11,8 @@ IsLastkey(key)
 SaveClipboard(){
     ; push clipboard to variable
     global ClipSaved := ClipboardAll
+    ; Sleep to give time for saving
+    sleep, 20
     ; Clear clipboard to avoid errors
     Clipboard :=
 }
@@ -27,10 +29,12 @@ Paste(){
 }
 
 RestoreClipboard(){
+    ; empty clip so clipwait works
+    Clipboard :=
     ;restore original clipboard
     global ClipSaved
     Clipboard := ClipSaved
-    ;ClipWait
+    ClipWait
     ClipSaved := ; free memory
 }
 
