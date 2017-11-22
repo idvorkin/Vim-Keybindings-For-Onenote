@@ -32,6 +32,8 @@ send {return}
 sleep, 100
 send {return}
 
+; Program that unlocks the remote desktop to allow GUIS to run.
+run, C:\Windows\System32\tscon.exe
 
 
 ; Env variables encrypted by appveyor.
