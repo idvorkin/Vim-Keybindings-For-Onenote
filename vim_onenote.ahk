@@ -1,5 +1,7 @@
 ;---------------------------------------
-; Basic VIM Keybinds for onenote.
+; VIM Keybinds for onenote.
+; This script treats a selected character in vim (where the block is) as the 
+; character to the right of the cursor in Onenote
 ;---------------------------------------
 
 ;---------------------------------------
