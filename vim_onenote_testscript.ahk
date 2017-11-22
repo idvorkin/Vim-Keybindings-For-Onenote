@@ -31,14 +31,10 @@ IfNotExist, testLogs
     FileCreateDir, testLogs
 LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 
-ToolTip, 32, 0, 0
 ; Initialise the programs
 SetWorkingDir %A_ScriptDir%\TestingLogs  ; Temp vim files are put out of the way.
-ToolTip, 35, 0, 0
 run, cmd.exe /r gvim,,,VimPID
-ToolTip, 37, 0, 0
 winwait,- GVIM ; Wait for vim to start
-ToolTip, 39, 0, 0
 SetWorkingDir %A_ScriptDir%  
 send :imap jj <esc>{return} ; Prepare vim    
 ;TODO: Check if onenote already open. Or just ignore? multiple windows may cause problems.
