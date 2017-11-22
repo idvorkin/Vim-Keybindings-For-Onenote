@@ -11,9 +11,12 @@ DetectHiddenWindows, on
 
 ; Open remote desktop link to same computer, to force gui stuff to run
 EnvGet,rdpPass,rdpPass
+; If blank, get defualt pw from reg
+if rdpPass==
+    RegRead, rdpPass, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon, DefaultPassword
 run, "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\Remote Desktop Connection.lnk"
 sleep, 2000
-send 127.0.0.4{return}
+send 127.0.0.4:3389{return}
 sleep, 3000
 send appveyor{tab}%rdpPass%{return}
 sleep, 3000
