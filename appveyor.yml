@@ -18,7 +18,7 @@ environment:
   onenotePass:
     secure: b6yIKUeWCVYQtWDkHfOa5aTphidnbBbx42gYk3RM8i8OisezTSRFiniXohCBHk5w
   appveyor_rdp_password:
-    secure: b6yIKUeWCVYQtWDkHfOa5aTphidnbBbx42gYk3RM8i8OisezTSRFiniXohCBHk5w
+    secure: iBRjDfC6MdkPoDujAvgkYiHHmM3hXHFHok2iK+RqQ3LIRU9GagEaeEVNRfjmQkej
 
 artifacts:
   - path: vim_onenote.exe
