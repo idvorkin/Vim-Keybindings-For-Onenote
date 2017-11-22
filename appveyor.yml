@@ -28,12 +28,12 @@ artifacts:
 
 init:
   # Initialise remote desktop stuff
-  - cmd: setx rdpPass %appveyor_rdp_password%
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
   # Set env variables
   - cmd: setx onenoteUser %onenoteUser%
   - cmd: setx onenotePass %onenotePass%
+  #- cmd: setx rdpPass %appveyor_rdp_password%
  
 
 install: 
