@@ -5,7 +5,7 @@ branches:
     - master
 
 
-#clone_folder: c:\Users\Appveyor\Desktop\vim-keybindings-for-onenote
+#clone_folder: C:\Users\appveyor\Desktop
 
 environment:
   # APPVEYOR_RDP_PASSWORD=""
@@ -33,7 +33,7 @@ init:
   # Set env variables
   - cmd: setx onenoteUser %onenoteUser%
   - cmd: setx onenotePass %onenotePass%
-  # - cmd: setx rdpPass %password%
+  # - cmd: setx rdpPass %appveyor_rdp_password%
  
 
 install: 

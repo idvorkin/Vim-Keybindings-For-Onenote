@@ -12,13 +12,13 @@ DetectHiddenWindows, on
 ; Open remote desktop link to same computer, to force gui stuff to run
 EnvGet,rdpPass,rdpPass
 run, "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\Remote Desktop Connection.lnk"
-sleep, 100
+sleep, 2000
 send 127.0.0.4{return}
-sleep, 300
+sleep, 3000
 send appveyor{tab}%rdpPass%{return}
-sleep, 300
+sleep, 3000
 send {left}{return}
-sleep, 1000
+sleep, 3000
 
 
 ; Registry entry to run GUI stuff on remote desktop
