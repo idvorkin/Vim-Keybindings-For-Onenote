@@ -17,16 +17,16 @@ EnvGet,ONPass,OnenotePass
 run, gvim,,,VimPID
 Run, OneNote,,,OneNotePID
 
-sleep, 1000
+sleep, 2500
 WinActivate,OneNote
 WinWaitActive,OneNote
-sleep, 1000
+sleep, 2500
 send {return}
 WinWaitActive,Accounts
-sleep, 1000
+sleep, 2000
 send %ONUser%
 send {return}
-sleep, 2000
+sleep, 2500
 send %ONPass%{return}
 winwait,Office
 send {return}
@@ -35,7 +35,7 @@ sleep, 200
 WinActivate,OneNote
 WinWaitActive,OneNote
 ; wait for notebook load
-sleep, 2500
+sleep, 3500
 
 
 /* Not using this method because it is too unreliable for testing
