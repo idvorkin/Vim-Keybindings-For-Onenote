@@ -43,7 +43,7 @@ Run, OneNote,,,OneNotePID
 winwait,OneNote ; Wait for onenote to start
 sleep, 200
 WinActivate,OneNote
-WinWaitActive,OneNote
+WaitForWindowToActivate("OneNote")
 sleep, 300
 send ^nVim Onenote Test{return} ; Create a new page in onenote, name it, move to text section
 WinMaximize,OneNote
@@ -109,13 +109,13 @@ RunTests(){
 }
 
 SwitchToVim(){
-    WinActivate,  - GVIM
-    WinWaitActive,  - GVIM
+    WinActivate, - GVIM
+    WaitForWindowToActivate(" - GVIM")
 }
 
 SwitchToOnenote(){
     WinActivate,OneNote
-    WinWaitActive,OneNote
+    WaitForWindowToActivate("OneNote")
 }
 
 SendTestToOnenoteAndReturnResult(test){

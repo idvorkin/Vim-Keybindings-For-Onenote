@@ -6,6 +6,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 #SingleInstance Force
 SetTitleMatchMode 2
+#include %A_ScriptDir%\vim_onenote_library.ahk
 
 
 ; Registry entry to run GUI stuff on remote desktop
@@ -33,8 +34,7 @@ sleep, 100
 send {return}
 
 ; Program that unlocks the remote desktop to allow GUIS to run.
-run, C:\Windows\System32\tscon.exe
-
+Run % "*RunAs C:\Windows\System32\tscon.exe " (A_Index-1) " /dest:console",,HIDE
 
 ; Env variables encrypted by appveyor.
 ; Store login info to use for onenote registration.
@@ -48,10 +48,10 @@ Run, OneNote,,,OneNotePID
 
 sleep, 2500
 WinActivate,OneNote
-WinWaitActive,OneNote
+WaitForWindowToActivate("OneNote")
 sleep, 2500
 send {return}
-WinWaitActive,Accounts
+WaitForWindowToActivate("Accounts")
 sleep, 2000
 send %ONUser%
 send {return}
@@ -62,7 +62,7 @@ send {return}
 winwait,OneNote ; Wait for onenote to start
 sleep, 200
 WinActivate,OneNote
-WinWaitActive,OneNote
+WaitForWindowToActivate("OneNote")
 ; wait for notebook load
 sleep, 3500
 
@@ -98,7 +98,7 @@ Run, OneNote,,,OneNotePID
 sleep, 500
 send {return}
 WinActivate,OneNote
-WinWaitActive,OneNote
+WaitForWindowToActivate("OneNote")
 ; Skip signin dialogues, add new notebook.
 send {return}
 sleep, 100
@@ -110,7 +110,7 @@ sleep, 200
 winwait,OneNote ; Wait for onenote to start
 sleep, 501
 WinActivate,OneNote
-WinWaitActive,OneNote
+WaitForWindowToActivate("OneNote")
 send ^n{return}
 sleep, 700
 send {return}

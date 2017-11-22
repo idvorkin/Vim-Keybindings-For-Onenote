@@ -44,3 +44,10 @@ GetSelectedText(){
     RestoreClipboard()
     return Output
 }
+
+WaitForWindowToActivate(WindowTitle){
+    while not WinActive(WindowTitle){
+       sleep, 20
+    }
+    sleep, 100
+}
