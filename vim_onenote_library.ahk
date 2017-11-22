@@ -53,4 +53,13 @@ WaitForWindowToActivate(WindowTitle){
        sleep, 20
     }
     sleep, 100
+    return True
+}
+
+HackWinActivate(WindowTitle){
+    while not WinActive(WindowTitle){
+       send {alt down}{shift down}{tab}{shift up}{alt up}
+    }
+    sleep, 100
+    return True
 }
