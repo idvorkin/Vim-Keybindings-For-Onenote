@@ -32,7 +32,7 @@ IfNotExist, testLogs
 LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 
 ; Initialise the programs
-SetWorkingDir %A_ScriptDir%\TestingLogs  ; Temp vim files are put out of the way.
+SetWorkingDir %A_ScriptDir%\testLogs  ; Temp vim files are put out of the way.
 run, cmd.exe /r gvim,,,VimPID
 winwait,- GVIM ; Wait for vim to start
 SetWorkingDir %A_ScriptDir%  
