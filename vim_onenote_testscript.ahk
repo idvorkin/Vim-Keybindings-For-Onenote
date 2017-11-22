@@ -175,6 +175,7 @@ TestAndCompareOutput(test){
     CompareStrings(OnenoteOutput, VimOutput, test)
 }
 
+; Use a diff, then log the result in temp files
 CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
     Global LogFileName
     Global TestsFailed
@@ -210,10 +211,11 @@ EndTesting(){
     Global TestsFailed
     Global LogFileName
     Global QuietMode
-    ; Delete the new page in onenote
+    ; Delete the new page in onenote, close onenote
     SwitchToOnenote()
     send ^+A
     send {delete}
+    send !{f4}
     SwitchToVim()
     send :q{!}
     send {return} ; Exit vim.
