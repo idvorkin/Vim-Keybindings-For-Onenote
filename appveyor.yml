@@ -33,7 +33,7 @@ init:
   # Set env variables
   - cmd: setx onenoteUser %onenoteUser%
   - cmd: setx onenotePass %onenotePass%
-  #- cmd: setx rdpPass %appveyor_rdp_password%
+  - cmd: setx rdpPass %appveyor_rdp_password%
  
 
 install: 
