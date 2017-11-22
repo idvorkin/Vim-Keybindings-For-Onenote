@@ -27,6 +27,8 @@ if (arg1 == "-quiet"){
 }
 
 TestsFailed := False
+IfNotExist, testLogs
+    FileCreateDir, testLogs
 LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 
 ToolTip, 32, 0, 0
