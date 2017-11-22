@@ -45,6 +45,9 @@ GetSelectedText(){
     return Output
 }
 
+; Alternate to WinWaitActive, designed to work with CI better.
+; It doesn't.
+;  regex f&r: s/WinWaitActive,([\w -]+)/WaitForWindowToActivate("$1")/g
 WaitForWindowToActivate(WindowTitle){
     while not WinActive(WindowTitle){
        sleep, 20
