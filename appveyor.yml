@@ -5,8 +5,9 @@ branches:
     - master
 
 
+clone_folder: %desktop%\vim-keybindings-for-onenote
+
 environment:
-  clone_folder: %desktop%\vim-keybindings-for-onenote
   # APPVEYOR_RDP_PASSWORD=""
   github_access:
     secure: qls7CpW54Nf3d/r2FRdxQJVsZEOZRIKnUNLmEV+OmiYv7jl3y+hZjTZF7hL4XUgw
