@@ -55,7 +55,7 @@ WaitForWindowToActivate("Accounts")
 sleep, 2000
 send %ONUser%
 send {return}
-sleep, 2500
+sleep, 3500
 send %ONPass%{return}
 winwait,Office
 send {return}
