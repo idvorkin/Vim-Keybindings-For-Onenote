@@ -435,7 +435,8 @@ g(LineNumber := ""){
 g::g()
 
 shift4(){
-    Send, {End} ;$
+    ; send left at end, because should be 'selecting' the final character.
+    Send, {End}{left} ;$
     }
 +4::shift4()
 
