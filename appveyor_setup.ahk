@@ -7,6 +7,33 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 #SingleInstance Force
 SetTitleMatchMode 2
 
+
+; Registry entry to run GUI stuff on remote desktop
+RegContents =
+(
+Windows Registry Editor Version 5.00`r
+`r
+[HKEY_LOCAL_MACHINE\Software\Microsoft\Terminal Server Client]`r
+"RemoteDesktop_SuppressWhenMinimized"=dword:2`r
+[HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client]`r
+"RemoteDesktop_SuppressWhenMinimized"=dword:2`r
+[HKEY_CURRENT_USER\Software\Wow6432Node\Microsoft\Terminal Server Client]`r
+"RemoteDesktop_SuppressWhenMinimized"=dword:2`r
+)
+RegFileName=%A_ScriptDir%\guiRun.reg
+RegFile := FileOpen(RegFileName, "w")
+RegFile.Write(RegContents)
+RegFile.Close()
+run %RegFileName%
+sleep, 100
+send {return}
+sleep, 100
+send {return}
+sleep, 100
+send {return}
+
+
+
 ; Env variables encrypted by appveyor.
 ; Store login info to use for onenote registration.
 ; Env variables encrypted by appveyor.
