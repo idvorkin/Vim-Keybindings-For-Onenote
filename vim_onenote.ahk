@@ -28,6 +28,8 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 ; #KeyHistory 0 ; Disables logging of keystrokes in key history
 #InstallKeybdHook ; Used for A_Priorkey
 #Warn ; Provides code warnings when running
+
+#include %A_ScriptDir%\vim_onenote_library.ahk
 ; Compilation directives to include the up and down exes.
 FileInstall, sendDown.exe, sendDown.exe
 FileInstall, sendUp.exe, sendUp.exe
@@ -141,7 +143,6 @@ return
 
 ;--------------------------------------------------------------------------------
 
-#include %A_ScriptDir%\vim_onenote_library.ahk
 
 GetCursorColumn(){
     BlockInput, on
