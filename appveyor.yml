@@ -62,11 +62,11 @@ after_test:
 
 deploy:
   release: vim_keybindings_for_onenote-v$(appveyor_build_version)
-  description: 'Latest CI build'
+  description: 'Latest CI build (add own description and update release name)'
   provider: GitHub
   auth_token: $(github_access) # your encrypted token from GitHub
   artifact: Executable
-  draft: false
+  draft: true
   prerelease: true
   on:
     appveyor_repo_tag: true        # deploy on tag push only
