@@ -13,6 +13,7 @@ sendlevel, 1 ; So these commands get triggered by autohotkey.
 SetTitleMatchMode 2 ; window title functions will match by containing the match text. 
 SetKeyDelay, 50 ; Only affects sendevent, used for sending the test
 ; (gives vim script time to react).
+DetectHiddenWindows, on 
 
 ; Contains clipboard related functions, among others.
 #include %A_ScriptDir%\vim_onenote_library.ahk

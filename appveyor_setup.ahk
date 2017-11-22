@@ -7,7 +7,7 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 #SingleInstance Force
 SetTitleMatchMode 2
 #include %A_ScriptDir%\vim_onenote_library.ahk
-
+DetectHiddenWindows, on 
 
 ; Registry entry to run GUI stuff on remote desktop
 RegContents =
