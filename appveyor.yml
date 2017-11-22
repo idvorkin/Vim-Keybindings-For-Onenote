@@ -6,6 +6,7 @@ branches:
 
 
 environment:
+  clone_folder: %desktop%\vim-keybindings-for-onenote
   # APPVEYOR_RDP_PASSWORD=""
   github_access:
     secure: qls7CpW54Nf3d/r2FRdxQJVsZEOZRIKnUNLmEV+OmiYv7jl3y+hZjTZF7hL4XUgw
@@ -17,8 +18,7 @@ environment:
     secure: PdIwrjncAGjHRbc1LcXwjLFWeYA04T9K+nYIpTW9AFs=
   onenotePass:
     secure: b6yIKUeWCVYQtWDkHfOa5aTphidnbBbx42gYk3RM8i8OisezTSRFiniXohCBHk5w
-  appveyor_rdp_password:
-    idv0rkin/vimkeybindingsforonenote
+  #appveyor_rdp_password:
     #secure: iBRjDfC6MdkPoDujAvgkYiHHmM3hXHFHok2iK+RqQ3LIRU9GagEaeEVNRfjmQkej
 
 artifacts:
