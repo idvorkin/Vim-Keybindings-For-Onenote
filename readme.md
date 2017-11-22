@@ -14,7 +14,7 @@ You can run the VIM keybinding via autohotkey, or by downloading and running the
 Run Vim keybindings via prebuilt executable
 -----
 
-* Download [vim\_onenote.exe](https://github.com/idvorkin/Vim-Keybindings-For-Onenote/raw/master/vim_onenote.exe)
+* Download [vim\_onenote.exe from releases](https://github.com/idvorkin/Vim-Keybindings-For-Onenote/releases)
 
 * Run [the buildscript](https://github.com/idvorkin/Vim-Keybindings-For-Onenote/blob/master/build.bat) to compile to exe from source .ahk
 
