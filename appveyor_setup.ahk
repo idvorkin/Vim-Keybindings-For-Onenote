@@ -9,6 +9,18 @@ SetTitleMatchMode 2
 #include %A_ScriptDir%\vim_onenote_library.ahk
 DetectHiddenWindows, on 
 
+; Open remote desktop link to same computer, to force gui stuff to run
+EnvGet,rdpPass,rdpPass
+run, "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\Remote Desktop Connection.lnk"
+sleep, 100
+send 127.0.0.4{return}
+sleep, 300
+send appveyor{tab}%rdpPass%{return}
+sleep, 300
+send {left}{return}
+sleep, 1000
+
+
 ; Registry entry to run GUI stuff on remote desktop
 RegContents =
 (
@@ -34,7 +46,8 @@ sleep, 100
 send {return}
 
 ; Program that unlocks the remote desktop to allow GUIS to run.
-Run % "*RunAs C:\Windows\System32\tscon.exe " (A_Index-1) " /dest:console",,HIDE
+loop, 7
+    Run % "*RunAs C:\Windows\System32\tscon.exe " (A_Index-1) " /dest:console",,HIDE
 
 ; Env variables encrypted by appveyor.
 ; Store login info to use for onenote registration.
