@@ -117,12 +117,16 @@ RunTests(){
 SwitchToVim(){
     ; HackWinActivate("- GVIM")
     ; ToolTip, SwitchToVim, 0, 0
+    global VimPID
     run, gvim,,,VimPID
     WaitForWindowToActivate("- GVIM")
 }
 
 SwitchToOnenote(){
-    HackWinActivate("OneNote")
+    ; HackWinActivate("OneNote")
+    sendraw, :q!
+    send {return}
+    sleep, 100
     ToolTip, SwitchToOnenote, 0, 0
     WaitForWindowToActivate("OneNote")
 }
@@ -159,6 +163,7 @@ SendTestToOnenoteAndReturnResult(test){
 
 SendTestToVimAndReturnResult(test){
     Global SampleText
+    global VimPID
     SwitchToVim()
     ; Ensure insert mode for the sample text.
     send i{backspace}
@@ -174,8 +179,6 @@ SendTestToVimAndReturnResult(test){
     send {return}
     ClipWait
     output := Clipboard
-    RestoreClipboard()
-    send {esc}:q{return}
     return output
 }
 
@@ -236,9 +239,11 @@ EndTesting(){
     send ^+A
     send {delete}
     send !{f4}
+    /*
     SwitchToVim()
     send :q{!}
     send {return} ; Exit vim.
+    */
    
     if (TestsFailed == True)
     {
