@@ -115,11 +115,13 @@ RunTests(){
 
 SwitchToVim(){
     WinActivate,- GVIM
+    ToolTip, SwitchToVim, 0, 0
     WaitForWindowToActivate("- GVIM")
 }
 
 SwitchToOnenote(){
     WinActivate,OneNote
+    ToolTip, SwitchToOnenote, 0, 0
     WaitForWindowToActivate("OneNote")
 }
 
