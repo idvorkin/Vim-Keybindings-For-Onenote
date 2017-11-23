@@ -87,6 +87,8 @@ WinActivate,OneNote
 WaitForWindowToActivate("OneNote") ; Wait for onenote to start
 ; wait for notebook load
 sleep, 3500
+send !{f4}
+sleep, 4000
 
 
 /* Not using this method because it is too unreliable for testing
