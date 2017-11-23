@@ -18,7 +18,7 @@ run, "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\Remote De
 sleep, 2000
 send 127.0.0.4:3389{return}
 sleep, 3000
-msgbox, %rdpPass%
+ToolTip, %rdpPass%, 0,0
 send appveyor{tab}%rdpPass%{return}
 sleep, 3000
 send {left}{return}
