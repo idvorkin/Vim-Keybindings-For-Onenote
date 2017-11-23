@@ -195,6 +195,16 @@ CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
     file1.close()
     file2.close()
 
+    if (CurrentTest != ""){
+        if(OnenoteOutput=="" or VIMOutput == ""){
+            TestsFailed := True
+            LogFile := FileOpen(LogFileName, "a")
+            LogEntry = Something may have gone wrong with the testing. Please try again.
+            LogFile.Write(LogEntry) ; "Test = ""%CurrentTest%""`n%DiffResult%`n`n")
+            LogFile.Close()
+        }
+    }
+
     ; This line runs the DOS fc (file compare) program and enters the reults in a file.
     ; Could also consider using comp.exe /AL instead, to compare individual characters. Possibly more useful.
     ; Comp sucks. Wow. Using fc, but only shows two lines: the different one and the one after. Hard to see, but it'll do for now.
