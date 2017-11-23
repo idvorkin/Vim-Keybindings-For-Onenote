@@ -39,7 +39,7 @@ LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 
 ; Initialise the programs
 SetWorkingDir %A_ScriptDir%\testLogs  ; Temp vim files are put out of the way.
-run, cmd.exe /r gvim,,,VimPID
+run, gvim,,,VimPID
 WaitForWindowToActivate("- GVIM") ; Wait for vim to start
 SetWorkingDir %A_ScriptDir%  
 send :imap jj <esc>{return} ; Prepare vim    
@@ -115,8 +115,9 @@ RunTests(){
 }
 
 SwitchToVim(){
-    HackWinActivate("- GVIM")
-    ToolTip, SwitchToVim, 0, 0
+    ; HackWinActivate("- GVIM")
+    ; ToolTip, SwitchToVim, 0, 0
+    run, gvim,,,VimPID
     WaitForWindowToActivate("- GVIM")
 }
 
@@ -174,6 +175,7 @@ SendTestToVimAndReturnResult(test){
     ClipWait
     output := Clipboard
     RestoreClipboard()
+    send {esc}:q{return}
     return output
 }
 
