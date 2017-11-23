@@ -100,7 +100,6 @@ ReadFileWithComments(OutputArray){
     }
 }
 
-ToolTip,make it here,20,20,5
 RunTests() ; Lets get this show on the road
 
 
@@ -129,6 +128,7 @@ SwitchToOnenote(){
 SendTestToOnenoteAndReturnResult(test){
     Global SampleText
     SwitchToOnenote()
+    ToolTip,make it here,20,20,5
     ; Make sure at start of body of onenote, and it's empty.
     send ^a^a{delete}
     ; Ensure insert mode for the sample text.
