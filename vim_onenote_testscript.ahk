@@ -64,7 +64,7 @@ Process, Priority, AHKVimPID,A
 
 ; This is the text that all of the tests are run on, fresh.
 ; Feel free to add extra lines to the end, if your test needs them.
-; The test will be send from normal mode, with the cursor at the start of the sample text.
+; The test will be sent from normal mode, with the cursor at the start of the sample text.
 SampleText =
 (
 This is the first line of the test, and contains a comma and a period.
