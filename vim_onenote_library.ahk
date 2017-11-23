@@ -74,7 +74,7 @@ HackWinActivate(WindowTitle){
         send {tab}
         sleep, 10
         send {shift up}{alt up}
-        sleep, 20
+        sleep, 150
     }
     ToolTip, Winactivate worked, 10, 10, 2
     sleep, 100
