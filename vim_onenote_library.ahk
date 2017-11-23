@@ -69,11 +69,11 @@ WaitForWindowToActivate(WindowTitle){
 HackWinActivate(WindowTitle){
     while not WinActive(WindowTitle){
         sleep, 10
-        send {alt down}{shift down}
+        send {alt down} ; {shift down}
         sleep, 10
-        send {tab}
+        send {esc}
         sleep, 10
-        send {shift up}{alt up}
+        send {shift up} ;{alt up}
         sleep, 150
     }
     ToolTip, Winactivate worked, 10, 10, 2
