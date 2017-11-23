@@ -15,7 +15,6 @@ EnvGet,rdpPass,rdpPass
 PWKey:= ""
 if (rdpPass==""){
     RegRead, rdpPass,HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon,DefaultPassword
-    MsgBox, %rdpPass%
 }
 run, "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\Remote Desktop Connection.lnk"
 sleep, 2000
