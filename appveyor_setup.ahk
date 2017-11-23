@@ -13,7 +13,6 @@ DetectHiddenWindows, on
 loop, 7
     Run % "*RunAs C:\Windows\System32\tscon.exe " (A_Index-1) " /dest:console",,HIDE
 
-msgbox
 ; Open remote desktop link to same computer, to force gui stuff to run
 EnvGet,rdpPass,rdpPass
 ; If blank, get defualt pw from reg
