@@ -74,9 +74,9 @@ send %ONUser%
 send {return}
 sleep, 3500
 send %ONPass%{return}
-winwait,Office
+WaitForWindowToActivate("Office")
 send {return}
-winwait,OneNote ; Wait for onenote to start
+WaitForWindowToActivate("OneNote "); Wait for onenote to start
 sleep, 200
 WinActivate,OneNote
 WaitForWindowToActivate("OneNote")
@@ -111,7 +111,7 @@ sleep, 50
 send {return}
 
 Run, OneNote,,,OneNotePID
-; winwait, - Microsoft OneNote ; Wait for onenote to start
+; WaitForWindowToActivate(" - Microsoft OneNote "); Wait for onenote to start
 sleep, 500
 send {return}
 WinActivate,OneNote
@@ -124,7 +124,7 @@ sleep, 500
 
 run C:\projects\vim-keybindings-for-onenote\test.one
 sleep, 200
-winwait,OneNote ; Wait for onenote to start
+WaitForWindowToActivate("OneNote "); Wait for onenote to start
 sleep, 501
 WinActivate,OneNote
 WaitForWindowToActivate("OneNote")

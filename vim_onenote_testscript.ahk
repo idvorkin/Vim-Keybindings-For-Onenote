@@ -27,6 +27,7 @@ if (arg1 == "-quiet"){
     QuietMode := False
 }
 isQuiet(){
+    Global QuietMode
     return QuietMode
 }
 
@@ -38,13 +39,13 @@ LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 ; Initialise the programs
 SetWorkingDir %A_ScriptDir%\testLogs  ; Temp vim files are put out of the way.
 run, cmd.exe /r gvim,,,VimPID
-winwait,- GVIM ; Wait for vim to start
+WaitForWindowToActivate("- GVIM "); Wait for vim to start
 SetWorkingDir %A_ScriptDir%  
 send :imap jj <esc>{return} ; Prepare vim    
 ;TODO: Check if onenote already open. Or just ignore? multiple windows may cause problems.
 ;       May be fixed by making the switch specific to the test page.
 Run, OneNote,,,OneNotePID
-winwait,OneNote ; Wait for onenote to start
+WaitForWindowToActivate("OneNote "); Wait for onenote to start
 sleep, 200
 WinActivate,OneNote
 WaitForWindowToActivate("OneNote")
@@ -225,7 +226,7 @@ EndTesting(){
    
     if (TestsFailed == True)
     {
-        if not isQuiet {
+        if not isQuiet() {
             msgbox,4,,At least one test has failed!`nResults are in %LogFileName%`nOpen log? 
             IfMsgBox Yes
             {
@@ -234,7 +235,7 @@ EndTesting(){
         }
         EndScript(1)
     }else{
-        if not QuietMode {
+        if not isQuiet() {
             msgbox, All tests pass!
         }
         EndScript(0)
