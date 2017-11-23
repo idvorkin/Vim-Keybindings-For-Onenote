@@ -26,6 +26,7 @@ if (arg1 == "-quiet"){
 }else{
     QuietMode := False
 }
+
 isQuiet(){
     Global QuietMode
     return QuietMode
