@@ -21,7 +21,9 @@ sleep, 2000
 send 127.0.0.4:3389{return}
 sleep, 3000
 ToolTip, %rdpPass%, 0,0
-send appveyor{tab}%rdpPass%{return}
+send appveyor{tab}
+sleep, 100
+send %rdpPass%{return}
 sleep, 3000
 send {left}{return}
 sleep, 3000
@@ -80,7 +82,7 @@ WaitForWindowToActivate("Office")
 send {return}
 sleep, 200
 WinActivate,OneNote
-WaitForWindowToActivate("OneNote ") ; Wait for onenote to start
+WaitForWindowToActivate("OneNote") ; Wait for onenote to start
 ; wait for notebook load
 sleep, 3500
 
