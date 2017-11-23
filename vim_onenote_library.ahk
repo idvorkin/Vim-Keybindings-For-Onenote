@@ -46,8 +46,8 @@ GetSelectedText(){
 }
 
 DebugLog(text){
-    LogFileName := "DebugLog.txt"
-    LogFile := FileOpen(LogFileName, "a")
+    FileName := "DebugLog.txt"
+    LogFile := FileOpen(FileName, "a")
     FormatTime, Timestamp ; Method gives current time by default
     LogEntry = %Timestamp%:   %text%`n
     LogFile.Write(LogEntry) 
