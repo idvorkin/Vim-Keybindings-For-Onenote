@@ -45,6 +45,15 @@ GetSelectedText(){
     return Output
 }
 
+DebugLog(text){
+    LogFileName := "DebugLog.txt"
+    LogFile := FileOpen(LogFileName, "a")
+    FormatTime, Timestamp ; Method gives current time by default
+    LogEntry = %Timestamp%:   %text%`n
+    LogFile.Write(LogEntry) 
+    LogFile.Close()
+}
+
 ; Alternate to WinWaitActive, designed to work with CI better.
 ; It doesn't.
 ;  regex f&r: s/WinWaitActive,([\w -]+)/WaitForWindowToActivate("$1")/g
