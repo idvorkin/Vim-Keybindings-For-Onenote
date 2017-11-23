@@ -114,8 +114,8 @@ RunTests(){
 }
 
 SwitchToVim(){
-    WinActivate, - GVIM
-    WaitForWindowToActivate(" - GVIM")
+    WinActivate,- GVIM
+    WaitForWindowToActivate("- GVIM")
 }
 
 SwitchToOnenote(){
