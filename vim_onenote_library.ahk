@@ -52,6 +52,7 @@ WaitForWindowToActivate(WindowTitle){
     while not WinActive(WindowTitle){
        sleep, 20
     }
+    ToolTip, winwait worked, 100, 100, 3
     sleep, 100
     return True
 }
