@@ -61,8 +61,6 @@ loop, 7
 
 ; Env variables encrypted by appveyor.
 ; Store login info to use for onenote registration.
-; Env variables encrypted by appveyor.
-; Store login info to use for onenote registration.
 EnvGet,ONUser,OnenoteUser
 EnvGet,ONPass,OnenotePass
 
