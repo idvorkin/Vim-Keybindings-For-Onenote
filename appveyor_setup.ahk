@@ -27,6 +27,8 @@ send %rdpPass%{return}
 sleep, 3000
 send {left}{return}
 sleep, 3000
+send {return}
+sleep, 3000
 
 
 ; Registry entry to run GUI stuff on remote desktop
