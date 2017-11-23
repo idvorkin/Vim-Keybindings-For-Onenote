@@ -26,6 +26,9 @@ if (arg1 == "-quiet"){
 }else{
     QuietMode := False
 }
+isQuiet(){
+    return QuietMode
+}
 
 TestsFailed := False
 IfNotExist, testLogs
@@ -211,7 +214,6 @@ CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
 EndTesting(){
     Global TestsFailed
     Global LogFileName
-    Global QuietMode
     ; Delete the new page in onenote, close onenote
     SwitchToOnenote()
     send ^+A
@@ -223,7 +225,7 @@ EndTesting(){
    
     if (TestsFailed == True)
     {
-        if not QuietMode {
+        if not isQuiet {
             msgbox,4,,At least one test has failed!`nResults are in %LogFileName%`nOpen log? 
             IfMsgBox Yes
             {
