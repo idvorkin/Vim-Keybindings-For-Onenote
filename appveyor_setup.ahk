@@ -70,7 +70,6 @@ run, gvim,,,VimPID
 Run, OneNote,,,OneNotePID
 
 sleep, 2500
-WinActivate,GVIM
 WinActivate,OneNote
 WaitForWindowToActivate("OneNote")
 sleep, 2500
