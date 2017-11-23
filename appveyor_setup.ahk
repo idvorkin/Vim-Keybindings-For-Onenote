@@ -48,11 +48,11 @@ RegFile := FileOpen(RegFileName, "w")
 RegFile.Write(RegContents)
 RegFile.Close()
 run %RegFileName%
-sleep, 100
+sleep, 1000
 send {return}
-sleep, 100
+sleep, 1000
 send {return}
-sleep, 100
+sleep, 1000
 send {return}
 
 ; Program that unlocks the remote desktop to allow GUIS to run.
