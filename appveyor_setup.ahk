@@ -67,6 +67,7 @@ EnvGet,ONPass,OnenotePass
 run, gvim,,,VimPID
 Run, OneNote,,,OneNotePID
 
+ToolTip,, 10, 10, 3
 sleep, 2500
 WinActivate,OneNote
 WaitForWindowToActivate("OneNote")
