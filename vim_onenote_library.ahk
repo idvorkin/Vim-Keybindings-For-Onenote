@@ -60,6 +60,7 @@ HackWinActivate(WindowTitle){
     while not WinActive(WindowTitle){
        send {alt down}{shift down}{tab}{shift up}{alt up}
     }
+    ToolTip, Winactivate worked, 10, 10, 2
     sleep, 100
     return True
 }
