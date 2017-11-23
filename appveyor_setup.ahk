@@ -76,7 +76,7 @@ sleep, 3500
 send %ONPass%{return}
 WaitForWindowToActivate("Office")
 send {return}
-WaitForWindowToActivate("OneNote "); Wait for onenote to start
+WaitForWindowToActivate("OneNote ") ; Wait for onenote to start
 sleep, 200
 WinActivate,OneNote
 WaitForWindowToActivate("OneNote")
