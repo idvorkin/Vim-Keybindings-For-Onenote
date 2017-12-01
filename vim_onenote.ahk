@@ -137,6 +137,7 @@ NormalMode:
     ; Disabled in AllowInput, to prevent kv bug.
     Hotkey, v, , on 
     send {shift up} ; Hopefully exit visual mode properly.
+    send {ctrl up}
     global InNormalMode := True
     ToolTip, OneNote Vim Command Mode Active, 0, 0
 return
