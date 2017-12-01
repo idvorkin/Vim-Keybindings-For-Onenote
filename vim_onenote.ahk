@@ -144,7 +144,7 @@ return
 ;--------------------------------------------------------------------------------
 
 ; Wait for single key to be pressed,
-; sends that key and returns to normal
+; returns that key and returns to normal
 singleLetterCapture(){
     gosub, InsertMode
     input, letter, E L1
@@ -152,10 +152,26 @@ singleLetterCapture(){
     return letter
 }
 
-seekToLetter(letter, direction){
+SeekToEndOfWhitespace(){
+    ; Move left until no more whitespace is encountered.
+    loop ; Break when you get to a letter rather than space
+    {
+        send +{left}
+        CurrentChar := GetSelectedText()
+        if CurrentChar is not whitespace
+        {
+            send {right}
+            break
+        }
+        else
+            send {left}
+    }
+}
+
+
+SeekToLetter(letter, direction){
     loop ; Break when you get to target letter
     {
-        tooltip, %direction%, 100, 100, 2
         send +{%direction%}
         CurrentChar := GetSelectedText()
         if (CurrentChar == letter)
@@ -430,20 +446,20 @@ x(){
 f::f()
 f(){
     
-    seekToLetter(singleLetterCapture(),"right")
+    SeekToLetter(singleLetterCapture(),"right")
 }
 +F::shiftF()
 shiftF(){
-    seekToLetter(singleLetterCapture(),"left")
+    SeekToLetter(singleLetterCapture(),"left")
 }
 
 t::t()
 t(){
-    seekToLetter(singleLetterCapture(),"right")
+    SeekToLetter(singleLetterCapture(),"right")
 }
 +T::shiftT()
 shiftT(){
-    seekToLetter(singleLetterCapture(),"left")
+    SeekToLetter(singleLetterCapture(),"left")
 }
 
 ; undo
@@ -482,10 +498,11 @@ shift4(){
     }
 +4::shift4()
 
-z(){
+zero(){
     Send, {Home} 
+    SeekToEndOfWhitespace()
     }
-0::z()
+0::zero()
 
 shift6(){
     Send, {Home} ;^
