@@ -143,6 +143,12 @@ return
 
 ;--------------------------------------------------------------------------------
 
+; Wait for single key to be pressed,
+; sends that key and returns to normal
+singleLetterCapture(){
+    input, letter, E L1
+    return letter
+}
 
 seekToLetter(letter, direction){
     loop ; Break when you get to a letter rather than space/punctuation
@@ -420,32 +426,21 @@ x(){
 
 f::f()
 f(){
-    ; Wait for single key to be pressed,
-    ; sends that key and returns to normal
-    input, inp, V E L1
-    seekToLetter(inp,"right")
+    
+    seekToLetter(singleLetterCapture(),"right")
 }
 +F::shiftF()
 shiftF(){
-    ; Wait for single key to be pressed,
-    ; sends that key and returns to normal
-    input, inp, V E L1
-    seekToLetter(inp,"left")
+    seekToLetter(singleLetterCapture(),"left")
 }
 
 t::t()
 t(){
-    ; Wait for single key to be pressed,
-    ; sends that key and returns to normal
-    input, inp, V E L1
-    seekToLetter(inp,"right")
+    seekToLetter(singleLetterCapture(),"right")
 }
 +T::shiftT()
 shiftT(){
-    ; Wait for single key to be pressed,
-    ; sends that key and returns to normal
-    input, inp, V E L1
-    seekToLetter(inp,"left")
+    seekToLetter(singleLetterCapture(),"left")
 }
 
 ; undo
@@ -730,9 +725,7 @@ return
 ;--------------------------------------------------------------------------------
 ; Eat all other keys if in command mode.
 ;--------------------------------------------------------------------------------
-f::
 m::
-t::
 +E::
 +B::
 +H::
@@ -742,7 +735,6 @@ t::
 +M::
 +Q::
 +R::
-+T::
 +U::
 +V::
 +W::
@@ -751,3 +743,4 @@ t::
 .::
 '::
 `;::
+`:::
