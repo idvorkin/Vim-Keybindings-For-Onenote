@@ -158,7 +158,7 @@ SeekToEndOfWhitespace(){
     {
         send +{left}
         CurrentChar := GetSelectedText()
-        if CurrentChar is not whitespace
+        if CurrentChar is alpha ; not whitespace
         {
             send {right}
             break
@@ -524,6 +524,14 @@ ctrlB(){
     }
 ^B::ctrlB()
 
++J::
+    ; Go to start of next line, find whitespace and delete it,
+    ; remove newline, add single space
+    send {end}{right}
+    SeekToEndOfWhitespace()
+    send +{home}{backspace 2}
+    send { }
+return
 
 
 y::
@@ -749,7 +757,6 @@ m::
 +E::
 +B::
 +H::
-+J::
 +K::
 +L::
 +M::
