@@ -144,6 +144,21 @@ return
 ;--------------------------------------------------------------------------------
 
 
+seekToLetter(letter, direction){
+    loop ; Break when you get to a letter rather than space/punctuation
+    {
+        send +{%direction%}
+        CurrentChar := GetSelectedText()
+        if CurrentChar is alpha
+        {
+            send {right}
+            break
+        }
+        else
+            send {left}
+    }
+}
+
 GetCursorColumn(){
     BlockInput, on
     StartC := A_CaretX
