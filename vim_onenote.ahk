@@ -418,7 +418,35 @@ x(){
     send {Delete}
 }
 
+f::f()
+f(){
+    ; Wait for single key to be pressed,
+    ; sends that key and returns to normal
+    input, inp, V E L1
+    seekToLetter(inp,"right")
+}
++F::shiftF()
+shiftF(){
+    ; Wait for single key to be pressed,
+    ; sends that key and returns to normal
+    input, inp, V E L1
+    seekToLetter(inp,"left")
+}
 
+t::t()
+t(){
+    ; Wait for single key to be pressed,
+    ; sends that key and returns to normal
+    input, inp, V E L1
+    seekToLetter(inp,"right")
+}
++T::shiftT()
+shiftT(){
+    ; Wait for single key to be pressed,
+    ; sends that key and returns to normal
+    input, inp, V E L1
+    seekToLetter(inp,"left")
+}
 
 ; undo
 u::Send, ^z
