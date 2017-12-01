@@ -146,22 +146,25 @@ return
 ; Wait for single key to be pressed,
 ; sends that key and returns to normal
 singleLetterCapture(){
+    gosub, InsertMode
     input, letter, E L1
+    gosub, NormalMode
     return letter
 }
 
 seekToLetter(letter, direction){
-    loop ; Break when you get to a letter rather than space/punctuation
+    loop ; Break when you get to target letter
     {
+        tooltip, %direction%, 100, 100, 2
         send +{%direction%}
         CurrentChar := GetSelectedText()
-        if CurrentChar is alpha
+        if (CurrentChar == letter)
         {
             send {right}
             break
         }
         else
-            send {left}
+            send {%direction%}
     }
 }
 
