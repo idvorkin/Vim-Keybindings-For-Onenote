@@ -713,24 +713,18 @@ return
     
 return
 
-;; << Outdent
-
-<::
-if IsLastHotkey("<")
-{
-    Send, {Home}
-    Send, +{Tab}
-}
-return
-
-;; << Outdent
-
+; in/outdent
 >::
-if IsLastHotkey(">")
-{
-    Send, {Home}
-    Send, {Tab}
-}
+    if IsLastHotkey(">")
+        ; Works, but moves cursor:
+        ; send {home}{tab}
+        ; The onenote-specific version:
+        send !+{right}
+return
+<::
+    if IsLastHotkey("<")
+        ; send +{tab}
+        send !+{left}
 return
 
 ; z  is the fold fold command.
