@@ -667,6 +667,8 @@ return
 return
 
 
+; TODO/bug: this method doesn't work with backwards motions
+; because of deselection method.
 ; Numbers will be used to repeat motions.
 1::
 2::
@@ -690,6 +692,7 @@ Send, ^e
 return 
 
 
+; TODO: support multiple chars (eg in visual mode)
 ; swap case of current letter. Uses shift + ` (ie ~), but uses virtual code
 ; because doesn't work otherwise. AHK uses ~ as special key, 
 ; escaping doesn't seem to work.
