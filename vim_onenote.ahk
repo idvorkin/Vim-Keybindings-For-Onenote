@@ -531,9 +531,8 @@ ctrlB(){
     ; remove newline, add single space.
     send {end}{right}
     SeekToEndOfWhitespace()
-    ; Send additional space after selecting to ensure
-    ; something is there to be deleted.
-    send +{home}{space}{backspace 2}
+    ; Select newline, delete
+    send +^{left}{backspace}
     send {space}
 return
 
