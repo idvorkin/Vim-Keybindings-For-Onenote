@@ -154,18 +154,18 @@ singleLetterCapture(){
 }
 
 SeekToEndOfWhitespace(){
-    ; Move left until no more whitespace is encountered.
+    ; Move until no more whitespace is encountered.
     loop ; Break when you get to a letter rather than space
     {
-        send +{left}
+        send +{right}
         CurrentChar := GetSelectedText()
         if CurrentChar is alpha ; not whitespace
-        {
-            send {right}
+        {           
+            send {left}
             break
         }
         else
-            send {left}
+            send {right}
     }
 }
 
@@ -501,12 +501,12 @@ shift4(){
 
 zero(){
     Send, {Home} 
-    SeekToEndOfWhitespace()
     }
 0::zero()
 
 shift6(){
     Send, {Home} ;^
+    SeekToEndOfWhitespace()
     }
 +6::shift6()
 
@@ -527,11 +527,13 @@ ctrlB(){
 
 +J::
     ; Go to start of next line, find whitespace and delete it,
-    ; remove newline, add single space
+    ; remove newline, add single space.
     send {end}{right}
     SeekToEndOfWhitespace()
-    send +{home}{backspace 2}
-    send { }
+    ; Send additional space after selecting to ensure
+    ; something is there to be deleted.
+    send +{home}{space}{backspace 2}
+    send {space}
 return
 
 
@@ -771,4 +773,4 @@ m::
 .::
 '::
 `;::
-`:::
+:::
