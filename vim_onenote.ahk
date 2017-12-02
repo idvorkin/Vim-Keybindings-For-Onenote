@@ -155,6 +155,7 @@ singleLetterCapture(){
 
 SeekToEndOfWhitespace(){
     ; Move until no more whitespace is encountered.
+    ; Doesn't cross new lines
     loop ; Break when you get to a letter rather than space
     {
         send +{right}
@@ -756,7 +757,7 @@ return
 ;--------------------------------------------------------------------------------
 ; Eat all other keys if in command mode.
 ;--------------------------------------------------------------------------------
-m::
+m::SeekToEndOfWhitespace()
 +E::
 +B::
 +H::
