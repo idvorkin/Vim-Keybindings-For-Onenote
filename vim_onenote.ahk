@@ -532,7 +532,11 @@ ctrlB(){
     send {end}{right}
     SeekToEndOfWhitespace()
     ; Select newline, delete
-    send +^{left}{backspace}
+    ; Have to paste incase using spaces instaed of tab.
+    ; A newline won't paste, a character will.
+    send +^{left}{backspace}+{left}
+    cut()
+    paste()
     send {space}
 return
 

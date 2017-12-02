@@ -23,6 +23,12 @@ Copy(){
     ClipWait, 0.1
 }
 
+Cut(){
+    SaveClipboard()
+    send ^x
+    ClipWait, 0.1
+}
+
 Paste(){
     Send %Clipboard%
     RestoreClipboard()
