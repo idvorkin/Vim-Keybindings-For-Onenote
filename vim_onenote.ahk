@@ -356,7 +356,7 @@ a::
 return 
 
 +o::
-    Send, {home}^{up}{End}{Enter}
+    Send, {home}{Enter}^{up}
     Gosub InsertMode
 return
 
@@ -370,7 +370,6 @@ r::
     gosub, InsertMode
     ; Wait for single key to be pressed, sends that key and returns to normal
     input, inp, V E L1
-    send {left}
     gosub, NormalMode
 return
 ;--------------------------------------------------------------------------------
