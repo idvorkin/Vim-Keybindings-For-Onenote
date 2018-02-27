@@ -595,6 +595,10 @@ return
         Send ^v
 return
 
+^w::
+    Suspend, permit
+    send ^{BackSpace}
+return
 
 ; Search actions
 /::
