@@ -161,7 +161,7 @@ SeekToEndOfWhitespace(){
         send +{right}
         CurrentChar := GetSelectedText()
         if CurrentChar is alpha ; not whitespace
-        {           
+        {
             send {left}
             break
         }
@@ -171,19 +171,20 @@ SeekToEndOfWhitespace(){
 }
 
 
-SeekToLetter(letter, direction){
-    loop ; Break when you get to target letter
-    {
-        send +{%direction%}
-        CurrentChar := GetSelectedText()
-        if (CurrentChar == letter)
-        {
-            send {right}
-            break
-        }
-        else
-            send {%direction%}
-    }
+SeekToLetterRight(letter){
+    send +{end} ; Select to end of line.
+    letterPos := inStr(getSelectedText(), letter, True)
+    send {left} ; deselect line
+    send {right %letterPos%}
+}
+SeekToLetterLeft(letter){
+    send +{home} ; Select to end of line.
+    lineLeft := getSelectedText()
+    send {right} ; deselect line
+    letterPos := inStr(lineLeft, letter, True, -1) ; Search backwards
+    lineLen := strLen(lineLeft)
+    reversePos := lineLen - letterPos
+    send {left %reversePos%}
 }
 
 GetCursorColumn(){
@@ -446,21 +447,22 @@ x(){
 
 f::f()
 f(){
-    
-    SeekToLetter(singleLetterCapture(),"right")
+    SeekToLetterRight(singleLetterCapture())
 }
 +F::shiftF()
 shiftF(){
-    SeekToLetter(singleLetterCapture(),"left")
+    SeekToLetterLeft(singleLetterCapture())
+    send {left}
 }
 
 t::t()
 t(){
-    SeekToLetter(singleLetterCapture(),"right")
+    SeekToLetterRight(singleLetterCapture())
+    send {left}
 }
 +T::shiftT()
 shiftT(){
-    SeekToLetter(singleLetterCapture(),"left")
+    SeekToLetterLeft(singleLetterCapture())
 }
 
 ; undo
