@@ -220,6 +220,40 @@ ConvertMotionToFunctionName(letter){
         return letter
 }
 
+handleG(motion, repeat, RepeatDigitDepth){
+    global PreviousMotion
+    if (PreviousMotion == "g" or IsLastHotkey("g")){
+        ; Reset previous motion
+            PreviousMotion = ""
+            if RepeatDigitDepth > 0
+            {
+                ; pass the number entered as a line number
+                    send {shift down}
+                g(repeat)
+                    send {shift up}
+                BlockInput, Off
+                    return True
+            }else{
+                send ^+{Home}
+                Motion = ""
+                    BlockInput, off
+                    send {shift up}
+                return True
+            }
+    ; }else{
+    ;     if (motion = "b"){
+    ;         send ^b
+    ;     }
+    ;     if (motion = "i"){
+    ;         send ^i
+    ;     }
+    ;     if (motion = "u"){
+    ;         send ^u
+    ;     }
+    ; }
+    return
+}
+
 ; Params are optional, with default values.
 InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
     global PreviousMotion
@@ -262,24 +296,8 @@ InputMotionAndSelect(Repeat:=1, RepeatDigitDepth:=0, VisualMode:= False){
                 return
             }else if (motion = "g")
             {
-                if (PreviousMotion == "g" or IsLastHotkey("g")){
-                    ; Reset previous motion
-                    PreviousMotion = ""
-                    if RepeatDigitDepth > 0
-                    {
-                        ; pass the number entered as a line number
-                        send {shift down}
-                        g(repeat)
-                        send {shift up}
-                        BlockInput, Off
-                        return
-                    }else{
-                        send ^+{Home}
-                        Motion = ""
-                        BlockInput, off
-                        send {shift up}
-                        return
-                    }
+                if handleG(motion, repeat, RepeatDigitDepth){
+                    return
                 }
             }else{
                 InputMotionAndSelect(Repeat, RepeatDigitDepth, VisualMode)
