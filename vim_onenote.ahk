@@ -240,17 +240,7 @@ handleG(motion, repeat, RepeatDigitDepth){
                     send {shift up}
                 return True
             }
-    ; }else{
-    ;     if (motion = "b"){
-    ;         send ^b
-    ;     }
-    ;     if (motion = "i"){
-    ;         send ^i
-    ;     }
-    ;     if (motion = "u"){
-    ;         send ^u
-    ;     }
-    ; }
+    }
     return
 }
 
@@ -510,6 +500,19 @@ g(LineNumber := ""){
             send {end}{right}
         }
     }
+    ; }else{
+    ;     if (motion = "b"){
+            ; InputMotionAndSelect()
+    ;         send ^b
+    ;     }
+    ;     if (motion = "i"){
+            ; InputMotionAndSelect()
+    ;         send ^i
+    ;     }
+    ;     if (motion = "u"){
+            ; InputMotionAndSelect()
+    ;         send ^u
+    ;     }
 }
 g::g()
 
